@@ -1,0 +1,107 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img [ref=e5]:
+      - generic [ref=e6]: Party Boost
+    - button [ref=e7] [cursor=pointer]:
+      - img [ref=e8]
+  - img [ref=e11]:
+    - generic [ref=e14]: Party Boost
+    - generic [ref=e15]: Level Up Your Party Games
+  - generic [ref=e16]: プレイヤー登録
+  - generic [ref=e18]:
+    - textbox "名前を入力" [ref=e19]
+    - button "追加" [ref=e20] [cursor=pointer]
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - generic [ref=e34]: た
+      - text: たろう
+      - generic [ref=e35] [cursor=pointer]: ✕
+    - generic [ref=e36]:
+      - generic [ref=e37]: は
+      - text: はなこ
+      - generic [ref=e38] [cursor=pointer]: ✕
+    - generic [ref=e39]:
+      - generic [ref=e40]: じ
+      - text: じろう
+      - generic [ref=e41] [cursor=pointer]: ✕
+  - generic [ref=e42]: 3/10人
+  - generic [ref=e43]: ゲーム一覧
+  - generic [ref=e44]:
+    - generic [ref=e45] [cursor=pointer]:
+      - img [ref=e47]
+      - generic [ref=e54]:
+        - heading "ルーレット" [level=3] [ref=e55]
+        - paragraph [ref=e56]: 負けた人が飲む！
+    - generic [ref=e57] [cursor=pointer]:
+      - img [ref=e59]:
+        - generic [ref=e62]: Party
+        - generic [ref=e63]: Boost
+      - generic [ref=e66]:
+        - heading "コイントス" [level=3] [ref=e67]
+        - paragraph [ref=e68]: 表か裏か！負けたら一杯
+    - generic [ref=e69] [cursor=pointer]:
+      - img [ref=e71]:
+        - generic [ref=e73]: 早口言葉
+        - generic [ref=e74]: ⚡
+      - generic [ref=e78]:
+        - heading "早口言葉" [level=3] [ref=e79]
+        - paragraph [ref=e80]: 噛んだら飲む！
+    - generic [ref=e81] [cursor=pointer]:
+      - img [ref=e83]:
+        - generic [ref=e85]: 🍺
+        - generic [ref=e87]: 🍺
+        - generic [ref=e89]: ？
+        - generic [ref=e91]: ？
+        - generic [ref=e93]: 🎲
+        - generic [ref=e95]: ？
+      - generic [ref=e96]:
+        - heading "神経衰弱" [level=3] [ref=e97]
+        - paragraph [ref=e98]: 揃えられなかったら飲む！
+    - generic [ref=e99] [cursor=pointer]:
+      - img [ref=e101]:
+        - generic [ref=e105]: A
+        - generic [ref=e106]: A
+        - generic [ref=e107]: B
+        - generic [ref=e108]: 少数派
+      - generic [ref=e110]:
+        - heading "マイノリティ" [level=3] [ref=e111]
+        - paragraph [ref=e112]: 少数派は飲む！
+    - generic [ref=e113] [cursor=pointer]:
+      - img [ref=e115]:
+        - generic [ref=e117]: お題
+        - generic [ref=e121]: 😂
+      - generic [ref=e122]:
+        - heading "大喜利" [level=3] [ref=e123]
+        - paragraph [ref=e124]: 最下位は飲む！
+    - generic [ref=e125] [cursor=pointer]:
+      - img [ref=e127]:
+        - generic [ref=e129]: ？
+        - generic [ref=e130]: ドキドキ
+      - generic [ref=e135]:
+        - heading "ドキドキ質問" [level=3] [ref=e136]
+        - paragraph [ref=e137]: 答えないなら飲む！
+    - generic [ref=e138] [cursor=pointer]:
+      - img [ref=e140]:
+        - generic [ref=e142]: Truth
+        - generic [ref=e143]: 🤔
+        - generic [ref=e145]: Dare
+        - generic [ref=e146]: 🔥
+        - generic [ref=e147]: OR
+      - generic [ref=e148]:
+        - heading "Truth or Dare" [level=3] [ref=e149]
+        - paragraph [ref=e150]: 拒否したら飲む！
+    - generic [ref=e151] [cursor=pointer]:
+      - img [ref=e153]:
+        - generic [ref=e156]: "5.0"
+        - generic [ref=e157]: STOP!
+      - generic [ref=e159]:
+        - heading "5秒STOP" [level=3] [ref=e160]
+        - paragraph [ref=e161]: ピッタリ止めろ！
+    - generic [ref=e162] [cursor=pointer]:
+      - img [ref=e164]:
+        - generic [ref=e172]: GOAL
+      - generic [ref=e180]:
+        - heading "すごろく" [level=3] [ref=e181]
+        - paragraph [ref=e182]:
+          - text: 止まったマスのお題は絶対！
+          - text: 新感覚すごろく！

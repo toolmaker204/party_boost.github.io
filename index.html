@@ -30,7 +30,7 @@ body{font-family:var(--font);color:var(--text);-webkit-tap-highlight-color:trans
   background:linear-gradient(170deg,#030410 0%,#08092a 30%,#0c0e30 55%,#0a0520 80%,#040512 100%);background-attachment:fixed}
 
 /* floating neon orbs */
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(ellipse 600px 600px at 15% 10%,rgba(168,85,247,.08),transparent),
     radial-gradient(ellipse 500px 500px at 85% 30%,rgba(0,232,255,.06),transparent),
@@ -38,7 +38,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
     radial-gradient(ellipse 300px 300px at 70% 90%,rgba(255,200,55,.04),transparent),
     radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(0,0,0,.5) 100%);
   animation:orbDrift 12s ease-in-out infinite alternate}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.25;
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.25;
   background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
 @keyframes orbDrift{
   0%{background-position:0% 0%,100% 0%,50% 100%,70% 90%,center}
@@ -97,9 +97,9 @@ select option{background:var(--bg2)}
 ───────────────────────────────────────────*/
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;position:sticky;top:0;z-index:60;background:linear-gradient(180deg,var(--bg) 60%,rgba(4,5,18,.95) 85%,transparent)}
 .topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,232,255,.08),rgba(168,85,247,.06),transparent)}
-.ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.06);background:rgba(14,16,36,.8);cursor:pointer;transition:all .25s;backdrop-filter:blur(8px)}
-.ib:active{background:rgba(0,232,255,.1);border-color:rgba(0,232,255,.3);box-shadow:var(--neon-line)}
-.ib svg{width:20px;height:20px;stroke:var(--text);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(200,198,224,.25);background:rgba(16,19,42,.85);cursor:pointer;transition:all .25s;box-shadow:0 0 8px rgba(0,0,0,.3)}
+.ib:active{background:rgba(0,232,255,.12);border-color:rgba(0,232,255,.4);box-shadow:var(--neon-line)}
+.ib svg{width:22px;height:22px;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
 .topbar h2{font-weight:800;font-size:1.05rem;color:var(--white);flex:1;text-align:center;letter-spacing:1px}
 .topbar-logo{filter:drop-shadow(0 0 8px rgba(168,85,247,.3)) drop-shadow(0 0 20px rgba(0,232,255,.12));animation:logoPulse 4s ease-in-out infinite}
 @keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 6px rgba(168,85,247,.25)) drop-shadow(0 0 16px rgba(0,232,255,.1))}50%{filter:drop-shadow(0 0 12px rgba(168,85,247,.45)) drop-shadow(0 0 30px rgba(0,232,255,.2))}}
@@ -377,6 +377,30 @@ select option{background:var(--bg2)}
 
 /* enhanced tab active */
 .tab.on{background:linear-gradient(135deg,var(--pink),#e01a60);color:var(--white);border-color:rgba(255,45,123,.4);box-shadow:0 0 14px rgba(255,45,123,.2)}
+
+/*───────────────────────────────────────────
+  GAME INTRO OVERLAY
+───────────────────────────────────────────*/
+.game-intro{position:fixed;inset:0;z-index:250;background:rgba(4,5,18,.97);backdrop-filter:blur(24px);display:none;align-items:center;justify-content:center;padding:24px}
+.game-intro.on{display:flex}
+.game-intro-c{max-width:380px;width:100%;text-align:center;animation:bounceIn .45s ease}
+.game-intro-c .gi-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:1px solid rgba(0,232,255,.2);background:rgba(0,232,255,.06);box-shadow:0 0 30px rgba(0,232,255,.15),0 0 60px rgba(255,45,123,.08)}
+.game-intro-c .gi-icon svg{width:40px;height:40px;filter:brightness(1.8) drop-shadow(0 0 8px rgba(0,232,255,.4))}
+.game-intro-c .gi-title{font-weight:900;font-size:1.5rem;color:var(--white);margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,.06)}
+.game-intro-c .gi-rule{text-align:left;margin:16px 0 24px;padding:16px;border-radius:var(--rs);background:rgba(16,19,42,.8);border:1px solid rgba(0,232,255,.1)}
+.game-intro-c .gi-rule .gi-rule-head{font-weight:800;font-size:.8rem;color:var(--cyan);margin-bottom:8px;letter-spacing:1px}
+.game-intro-c .gi-rule p{font-size:.85rem;color:var(--text);line-height:1.8}
+.game-intro-c .gi-rule .gi-pink{color:var(--pink);font-weight:700}
+
+/*───────────────────────────────────────────
+  MINORITY TURN MODAL
+───────────────────────────────────────────*/
+.mn-turn-modal{position:fixed;inset:0;z-index:260;background:rgba(4,5,18,.95);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;padding:24px}
+.mn-turn-modal.on{display:flex}
+.mn-turn-modal-c{text-align:center;animation:bounceIn .4s ease}
+.mn-turn-modal-c .mn-turn-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:#fff;margin:0 auto 16px;box-shadow:0 0 20px rgba(0,0,0,.3)}
+.mn-turn-modal-c .mn-turn-name{font-weight:900;font-size:1.3rem;color:var(--white);margin-bottom:6px}
+.mn-turn-modal-c .mn-turn-sub{color:var(--text2);font-size:.85rem;margin-bottom:24px}
 </style>
 </head>
 <body>
@@ -389,7 +413,7 @@ select option{background:var(--bg2)}
     <linearGradient id="ig-pink" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d7b"/><stop offset="100%" stop-color="#ff6b9d"/></linearGradient>
     <linearGradient id="ig-cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00e8ff"/><stop offset="100%" stop-color="#5bdbf5"/></linearGradient>
     <linearGradient id="ig-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffc837"/><stop offset="100%" stop-color="#ff8008"/></linearGradient>
-    <linearGradient id="ig-purple" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6366f1"/></linearGradient>
+    <linearGradient id="ig-purple" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#818cf8"/></linearGradient>
     <linearGradient id="ig-green" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient>
     <linearGradient id="ig-fire" x1="0" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#ffc837"/><stop offset="40%" stop-color="#ff8008"/><stop offset="100%" stop-color="#ff2d7b"/></linearGradient>
     <linearGradient id="ig-heart" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d7b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient>
@@ -397,7 +421,7 @@ select option{background:var(--bg2)}
   <!-- back arrow -->
   <symbol id="i-back" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1" opacity=".15"/><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <!-- gear -->
-  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5" fill="url(#ig-purple)" stroke="none"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="url(#ig-purple)" stroke-width="1.5" fill="none"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="#f0eeff" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="#f0eeff" stroke-width="2" fill="none"/></symbol>
   <!-- target / roulette -->
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="url(#ig-gold)" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="6" stroke="url(#ig-pink)" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="2.5" fill="url(#ig-pink)" stroke="none"/><line x1="12" y1="2" x2="12" y2="6" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="22" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="12" x2="6" y2="12" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><line x1="18" y1="12" x2="22" y2="12" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/></symbol>
   <!-- coin -->
@@ -447,7 +471,7 @@ select option{background:var(--bg2)}
   <div class="topbar">
     <div style="width:42px"></div>
     <svg class="topbar-logo" viewBox="0 0 180 32" style="height:28px;width:auto"><defs><linearGradient id="lg-tb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00c2d4"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#ff2d7b"/></linearGradient></defs><text x="90" y="24" text-anchor="middle" font-family="'SF Pro Display','Hiragino Kaku Gothic ProN',sans-serif" font-weight="900" font-size="24" fill="url(#lg-tb)" letter-spacing="1">Party Boost</text></svg>
-    <button class="ib" onclick="go('s-settings')"><svg><use href="#i-gear"/></svg></button>
+    <button class="ib" onclick="go('s-settings')"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button>
   </div>
 
   <!-- hero -->
@@ -639,7 +663,7 @@ select option{background:var(--bg2)}
 <div id="s-settings" class="scr">
 <div class="mw">
   <div class="topbar">
-    <button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button>
+    <button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button>
     <h2>設定</h2>
     <div style="width:42px"></div>
   </div>
@@ -682,7 +706,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-roulette" class="scr">
 <div class="mw">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>ルーレット</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>ルーレット</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -704,7 +728,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-coin" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>コイントス</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>コイントス</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -734,7 +758,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-tongue" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>早口言葉</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>早口言葉</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -761,7 +785,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-memory" class="scr">
 <div class="mw">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>神経衰弱</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>神経衰弱</h2><div style="width:42px"></div></div>
 
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
@@ -784,7 +808,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-minority" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>マイノリティ</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>マイノリティ</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -807,7 +831,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-ogiri" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>大喜利</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>大喜利</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -834,7 +858,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-question" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>ドキドキ質問カード</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>ドキドキ質問カード</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -854,7 +878,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-truth" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>Truth or Dare</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>Truth or Dare</h2><div style="width:42px"></div></div>
 
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
@@ -867,11 +891,11 @@ select option{background:var(--bg2)}
   <div id="td-who" style="font-weight:800;font-size:1.2rem;margin:10px 0 16px;color:var(--white)"></div>
   <div class="g2" style="margin:0 0 20px">
     <button class="btn bc" onclick="tdPick('truth')" style="height:120px;flex-direction:column;gap:8px;border-radius:16px">
-      <svg style="width:36px;height:36px"><use href="#i-help"/></svg>
+      <svg viewBox="0 0 24 24" style="width:36px;height:36px"><use href="#i-help"/></svg>
       <span style="font-size:1.2rem;font-weight:900">Truth</span><span style="font-size:.72rem;opacity:.7">真実を話す</span>
     </button>
     <button class="btn bp" onclick="tdPick('dare')" style="height:120px;flex-direction:column;gap:8px;border-radius:16px">
-      <svg style="width:36px;height:36px"><use href="#i-fire"/></svg>
+      <svg viewBox="0 0 24 24" style="width:36px;height:36px"><use href="#i-fire"/></svg>
       <span style="font-size:1.2rem;font-weight:900">Dare</span><span style="font-size:.72rem;opacity:.7">挑戦する</span>
     </button>
   </div>
@@ -887,7 +911,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-stop5" class="scr">
 <div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>5秒STOP</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>5秒STOP</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -908,7 +932,7 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <div id="s-sugoroku" class="scr">
 <div class="mw">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>すごろく</h2><div style="width:42px"></div></div>
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>すごろく</h2><div style="width:42px"></div></div>
   <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
     <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
     <div style="font-size:.75rem;color:var(--text);line-height:1.7">
@@ -963,6 +987,33 @@ select option{background:var(--bg2)}
 </div>
 
 <!-- ============================================================
+     GAME INTRO OVERLAY
+     ============================================================ -->
+<div class="game-intro" id="game-intro">
+  <div class="game-intro-c">
+    <div class="gi-icon" id="gi-icon"></div>
+    <div class="gi-title" id="gi-title"></div>
+    <div class="gi-rule">
+      <div class="gi-rule-head">遊び方</div>
+      <p id="gi-desc"></p>
+    </div>
+    <button class="btn bp" id="gi-start" style="font-size:1.1rem">ゲームスタート！</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     MINORITY TURN MODAL
+     ============================================================ -->
+<div class="mn-turn-modal" id="mn-turn-modal">
+  <div class="mn-turn-modal-c">
+    <div class="mn-turn-av" id="mn-turn-av"></div>
+    <div class="mn-turn-name" id="mn-turn-name"></div>
+    <div class="mn-turn-sub">他の人はスマホを見ないでね！</div>
+    <button class="btn bc" onclick="closeMnTurn()" style="max-width:240px;margin:0 auto">OK、準備できた！</button>
+  </div>
+</div>
+
+<!-- ============================================================
      JAVASCRIPT
      ============================================================ -->
 <script>
@@ -981,8 +1032,34 @@ load();
 
 /* ═══════ NAV ═══════ */
 function go(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0)}
+const GAME_INFO={
+  roulette:{title:'ルーレット',icon:'i-target',desc:'ルーレットを回して止まった人が罰ゲーム！<br><span class="gi-pink">選ばれた人は飲む！</span>',btn:'bp'},
+  coin:{title:'コイントス',icon:'i-coin',desc:'表か裏を予想してコインを投げよう！<br><span class="gi-pink">ハズレた人は1杯飲む！</span>',btn:'bg'},
+  tongue:{title:'早口言葉',icon:'i-mouth',desc:'制限時間内に早口言葉を言おう！<br><span class="gi-pink">噛んだり時間切れで1杯飲む！</span>',btn:'bp'},
+  memory:{title:'神経衰弱',icon:'i-image',desc:'カードを2枚めくって同じ絵柄ならゲット！<br><span class="gi-pink">揃わなかったら1杯飲む！</span><br>一番多く揃えた人が優勝！',btn:'bc'},
+  minority:{title:'マイノリティ',icon:'i-people',desc:'二択の質問に全員で投票！<br><span class="gi-pink">少数派になった人は飲む！</span><br><span class="gi-pink">同数の場合は全員飲む！</span>',btn:'bp'},
+  ogiri:{title:'大喜利',icon:'i-laugh',desc:'お題に対して全員が回答！一斉公開して投票！<br><span class="gi-pink">最下位の人は飲む！</span>',btn:'bg'},
+  question:{title:'ドキドキ質問',icon:'i-heart',desc:'カードをめくってドキドキな質問に正直に答えよう！<br><span class="gi-pink">答えなかったら1杯飲む！</span>',btn:'bp'},
+  truth:{title:'Truth or Dare',icon:'i-fire',desc:'<span style="color:var(--cyan);font-weight:700">Truth</span>（質問に正直に答える）か <span class="gi-pink">Dare</span>（お題に挑戦）を選ぼう！<br><span class="gi-pink">拒否したら1杯飲む！</span>',btn:'bp'},
+  stop5:{title:'5秒STOP',icon:'i-timer',desc:'目を閉じてピッタリ5.00秒でストップ！±0.10秒以内でセーフ<br><span class="gi-pink">外れたら1杯飲む！</span>',btn:'bc'},
+  sugoroku:{title:'すごろく',icon:'i-dice',desc:'サイコロを振ってマスを進もう！止まったマスの指示は絶対！<br><span class="gi-pink">最後にゴールした人が罰ゲーム！</span>',btn:'bp'},
+};
 function launch(g){
   if(g!=='coin'&&g!=='question'&&g!=='truth'&&g!=='stop5'&&S.players.length<2){alert('プレイヤーを2人以上登録してね！');return}
+  const info=GAME_INFO[g];
+  if(info){
+    const el=document.getElementById('game-intro');
+    document.getElementById('gi-icon').innerHTML=pIcon(info.icon,'var(--cyan)',40);
+    document.getElementById('gi-title').textContent=info.title;
+    document.getElementById('gi-desc').innerHTML=info.desc;
+    const btn=document.getElementById('gi-start');
+    btn.className='btn '+info.btn;
+    btn.textContent='ゲームスタート！';
+    btn.onclick=function(){el.classList.remove('on');launchGame(g)};
+    el.classList.add('on');se();
+  }else{launchGame(g)}
+}
+function launchGame(g){
   go('s-'+g);
   if(g==='roulette')initRL();
   if(g==='truth')tdNext();
@@ -1038,7 +1115,7 @@ function showRes(iconSvg,title,desc,pun){
   document.getElementById('ov-res').classList.add('on');confetti();fanfare();
 }
 function closeRes(){document.getElementById('ov-res').classList.remove('on')}
-function pIcon(id,color,sz){return `<svg style="width:${sz||52}px;height:${sz||52}px"><use href="#${id}"/></svg>`}
+function pIcon(id,color,sz){return `<svg viewBox="0 0 24 24" style="width:${sz||52}px;height:${sz||52}px"><use href="#${id}"/></svg>`}
 
 /* ═══════ ROULETTE ═══════ */
 let rlAng=0;
@@ -1157,16 +1234,32 @@ const MQ=[
 let mnQ=null,mnV={},mnVi=0;
 function startMN(){mnQ=MQ[~~(Math.random()*MQ.length)];mnV={};mnVi=0;
   document.getElementById('mn-q').textContent=mnQ.q;document.getElementById('mn-a').textContent=mnQ.a;document.getElementById('mn-b').textContent=mnQ.b;
-  document.getElementById('mn-ch').style.display='block';document.getElementById('mn-res').innerHTML='';document.getElementById('mn-btn').style.display='none';
-  updMnV();se()}
-function updMnV(){document.getElementById('mn-info').textContent=S.players[mnVi].name+'：選んでください（他の人見ないで！）'}
-function mnVote(c){mnV[mnVi]=c;mnVi++;if(mnVi<S.players.length){updMnV();se()}else{
+  document.getElementById('mn-ch').style.display='none';document.getElementById('mn-res').innerHTML='';document.getElementById('mn-btn').style.display='none';
+  showMnTurn();se()}
+function showMnTurn(){
+  const p=S.players[mnVi];
+  document.getElementById('mn-turn-av').className='mn-turn-av av'+p.ci;
+  document.getElementById('mn-turn-av').textContent=p.name[0];
+  document.getElementById('mn-turn-name').textContent=p.name+'の番';
+  document.getElementById('mn-turn-modal').classList.add('on');
+  document.getElementById('mn-ch').style.display='none';
+  document.getElementById('mn-info').textContent='';
+}
+function closeMnTurn(){
+  document.getElementById('mn-turn-modal').classList.remove('on');
+  document.getElementById('mn-ch').style.display='block';
+  updMnV();
+}
+function updMnV(){document.getElementById('mn-info').textContent=S.players[mnVi].name+'：どっち？'}
+function mnVote(c){mnV[mnVi]=c;mnVi++;if(mnVi<S.players.length){showMnTurn();se()}else{
   document.getElementById('mn-ch').style.display='none';document.getElementById('mn-info').textContent='';
   const cA=Object.values(mnV).filter(v=>v==='A').length,cB=Object.values(mnV).filter(v=>v==='B').length;
-  const ms=cA<=cB?'A':'B',losers=S.players.filter((_,i)=>mnV[i]===ms);
-  document.getElementById('mn-res').innerHTML=`<div style="margin-bottom:8px">${mnQ.a}: ${cA}票 / ${mnQ.b}: ${cB}票</div><div style="color:var(--pink);font-weight:800">少数派: ${losers.map(l=>l.name).join(', ')}</div>`;
+  let losers,resLabel;
+  if(cA===cB){losers=S.players.slice();resLabel='同数！全員飲め！'}
+  else{const ms=cA<cB?'A':'B';losers=S.players.filter((_,i)=>mnV[i]===ms);resLabel='少数派: '+losers.map(l=>l.name).join(', ')}
+  document.getElementById('mn-res').innerHTML=`<div style="margin-bottom:8px">${mnQ.a}: ${cA}票 / ${mnQ.b}: ${cB}票</div><div style="color:var(--pink);font-weight:800">${resLabel}</div>`;
   document.getElementById('mn-btn').style.display='';document.getElementById('mn-btn').textContent='次の質問';
-  if(losers.length)showRes(pIcon('i-people','var(--green)'),losers.map(l=>l.name).join(', '),'少数派！飲め！',rndPun());
+  if(losers.length)showRes(pIcon('i-people','var(--green)'),losers.map(l=>l.name).join(', '),cA===cB?'同数！全員飲め！':'少数派！飲め！',rndPun());
 }}
 
 /* ═══════ OGIRI ═══════ */
@@ -1281,7 +1374,7 @@ function renderBrd(){
     // front (face-down)
     h+=`<div class="cel-front"><div class="card-pattern"></div><span class="cn">${i}</span><span class="card-q">?</span>${ph.length&&!isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
     // back (revealed)
-    h+=`<div class="cel-back ${c.cls}"><span class="cn">${i}</span><svg class="ci" style="width:16px;height:16px"><use href="#${c.ic}"/></svg><span class="lb">${c.lb||''}</span><span class="ev-text">${c.ev||''}</span>${ph.length&&isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
+    h+=`<div class="cel-back ${c.cls}"><span class="cn">${i}</span><svg viewBox="0 0 24 24" class="ci" style="width:16px;height:16px"><use href="#${c.ic}"/></svg><span class="lb">${c.lb||''}</span><span class="ev-text">${c.ev||''}</span>${ph.length&&isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
     h+=`</div></div>`;
   });
   h+='</div>';document.getElementById('sg-brd').innerHTML=h;
@@ -1354,7 +1447,7 @@ function animateHop(pi,fromPos,steps){
 
 function showFSE(c){
   const el=document.getElementById('fse');
-  document.getElementById('fse-icon').innerHTML=`<svg style="width:48px;height:48px"><use href="#${c.ic}"/></svg>`;
+  document.getElementById('fse-icon').innerHTML=`<svg viewBox="0 0 24 24" style="width:48px;height:48px"><use href="#${c.ic}"/></svg>`;
   document.getElementById('fse-icon').style.background=c.cat||'rgba(255,255,255,.1)';
   document.getElementById('fse-text').textContent=c.ev;
   const cat=document.getElementById('fse-cat');cat.textContent=c.lb||c.t;cat.style.background=c.cat||'rgba(255,255,255,.1)';

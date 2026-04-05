@@ -10,7 +10,8 @@
       "mcp__plugin_playwright_playwright__browser_run_code",
       "Bash(npx -y http-server -p 8766 -c-1)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8766/index.html)",
-      "mcp__plugin_playwright_playwright__browser_evaluate"
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_resize"
     ]
   }
 }
