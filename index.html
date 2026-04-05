@@ -408,7 +408,7 @@ select option{background:var(--bg2)}
 <!-- ============================================================
      SVG SPRITE (hidden)
      ============================================================ -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
     <linearGradient id="ig-pink" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d7b"/><stop offset="100%" stop-color="#ff6b9d"/></linearGradient>
     <linearGradient id="ig-cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00e8ff"/><stop offset="100%" stop-color="#5bdbf5"/></linearGradient>
@@ -468,7 +468,7 @@ select option{background:var(--bg2)}
 <div id="s-home" class="scr on">
 <div class="mw">
   <!-- top row: spacer + logo + gear -->
-  <div class="topbar">
+  <div class="topbar" style="background:transparent;position:relative">
     <div style="width:42px"></div>
     <svg class="topbar-logo" viewBox="0 0 180 32" style="height:28px;width:auto"><defs><linearGradient id="lg-tb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00c2d4"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#ff2d7b"/></linearGradient></defs><text x="90" y="24" text-anchor="middle" font-family="'SF Pro Display','Hiragino Kaku Gothic ProN',sans-serif" font-weight="900" font-size="24" fill="url(#lg-tb)" letter-spacing="1">Party Boost</text></svg>
     <button class="ib" onclick="go('s-settings')"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button>
@@ -1115,7 +1115,7 @@ function showRes(iconSvg,title,desc,pun){
   document.getElementById('ov-res').classList.add('on');confetti();fanfare();
 }
 function closeRes(){document.getElementById('ov-res').classList.remove('on')}
-function pIcon(id,color,sz){return `<svg viewBox="0 0 24 24" style="width:${sz||52}px;height:${sz||52}px"><use href="#${id}"/></svg>`}
+function pIcon(id,color,sz){const sym=document.getElementById(id);if(sym){const vb=sym.getAttribute('viewBox')||'0 0 24 24';return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" style="width:${sz||52}px;height:${sz||52}px">${sym.innerHTML}</svg>`}return `<svg viewBox="0 0 24 24" style="width:${sz||52}px;height:${sz||52}px"><use href="#${id}"/></svg>`}
 
 /* ═══════ ROULETTE ═══════ */
 let rlAng=0;
