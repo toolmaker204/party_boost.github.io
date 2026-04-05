@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#08070d">
+<meta name="theme-color" content="#06071a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Party Boost</title>
@@ -15,21 +15,24 @@
 ───────────────────────────────────────────*/
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#08070d;--bg2:#0f0e18;--bg3:#171624;--bg4:#1f1e30;
+  --bg:#06071a;--bg2:#0c0e24;--bg3:#12152e;--bg4:#1a1d3a;
   --pink:#ff2d7b;--cyan:#00e8ff;--gold:#ffc837;--green:#34d399;--purple:#a855f7;--red:#ef4444;
-  --text:#d4d3e0;--text2:#8887a0;--white:#f4f3ff;
-  --r:14px;--rs:8px;
+  --text:#c8c6e0;--text2:#6e6d8a;--white:#f0eeff;
+  --r:18px;--rs:10px;
   --font:-apple-system,'SF Pro Display','SF Pro Text','Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif;
-  --gp:0 0 24px rgba(255,45,123,.35),0 0 80px rgba(255,45,123,.08);
-  --gc:0 0 24px rgba(0,232,255,.35),0 0 80px rgba(0,232,255,.08);
-  --gg:0 0 24px rgba(255,200,55,.35),0 0 80px rgba(255,200,55,.08);
+  --gp:0 0 20px rgba(255,45,123,.4),0 0 60px rgba(255,45,123,.1),0 0 120px rgba(255,45,123,.04);
+  --gc:0 0 20px rgba(0,232,255,.4),0 0 60px rgba(0,232,255,.1),0 0 120px rgba(0,232,255,.04);
+  --gg:0 0 20px rgba(255,200,55,.4),0 0 60px rgba(255,200,55,.1),0 0 120px rgba(255,200,55,.04);
+  --neon-line:0 0 4px rgba(0,232,255,.4),0 0 12px rgba(0,232,255,.15);
 }
 html,body{height:100%;overflow:hidden;background:var(--bg)}
-body{font-family:var(--font);color:var(--text);-webkit-tap-highlight-color:transparent;overflow-y:auto;font-size:15px;line-height:1.5}
+body{font-family:var(--font);color:var(--text);-webkit-tap-highlight-color:transparent;overflow-y:auto;font-size:15px;line-height:1.5;
+  background:linear-gradient(170deg,#06071a 0%,#0a0c22 40%,#0e1030 70%,#08091c 100%);background-attachment:fixed}
 
-/* noise grain */
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.35;
-  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E")}
+/* noise grain + subtle vignette */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(0,0,0,.4) 100%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.3;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
 
 /*───────────────────────────────────────────
   SCREENS
@@ -43,59 +46,63 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 ───────────────────────────────────────────*/
 .btn{
   display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:15px 24px;border:none;border-radius:var(--r);width:100%;
+  padding:16px 24px;border:none;border-radius:var(--r);width:100%;
   font-family:var(--font);font-weight:700;font-size:.95rem;color:var(--white);
-  cursor:pointer;transition:transform .15s,box-shadow .25s;min-height:54px;text-align:center;
+  cursor:pointer;transition:transform .15s,box-shadow .3s,filter .2s;min-height:54px;text-align:center;
+  position:relative;overflow:hidden;letter-spacing:.3px;
 }
-.btn:active{transform:scale(.96)}
-.bp{background:linear-gradient(135deg,var(--pink),#ff6b9d);box-shadow:var(--gp)}
-.bc{background:linear-gradient(135deg,var(--cyan),#5bdbf5);box-shadow:var(--gc);color:#08070d}
-.bg{background:linear-gradient(135deg,var(--gold),#ffe066);box-shadow:var(--gg);color:#08070d}
-.bo{background:transparent;border:1.5px solid rgba(255,255,255,.12);color:var(--text)}
-.bo:active{border-color:var(--cyan)}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 50%);pointer-events:none;border-radius:inherit}
+.btn:active{transform:scale(.96);filter:brightness(.9)}
+.bp{background:linear-gradient(135deg,var(--pink),#c9235f);box-shadow:var(--gp)}
+.bc{background:linear-gradient(135deg,var(--cyan),#00a8c6);box-shadow:var(--gc);color:#06071a}
+.bg{background:linear-gradient(135deg,var(--gold),#e6a800);box-shadow:var(--gg);color:#06071a}
+.bo{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.08);color:var(--text)}
+.bo::after{display:none}
+.bo:active{border-color:var(--cyan);background:rgba(0,232,255,.06);box-shadow:var(--neon-line)}
 .bsm{padding:10px 16px;min-height:42px;width:auto;font-size:.85rem;border-radius:var(--rs)}
 .bdng{background:linear-gradient(135deg,#ef4444,#b91c1c)}
 
 /*───────────────────────────────────────────
   CARDS & INPUTS
 ───────────────────────────────────────────*/
-.card{background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:var(--r);padding:20px}
+.card{background:linear-gradient(160deg,rgba(12,14,36,.85),rgba(18,21,46,.7));border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:20px;backdrop-filter:blur(8px);box-shadow:0 4px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.04)}
 input[type=text],input[type=number],textarea,select{
-  width:100%;padding:13px 14px;background:var(--bg3);border:1.5px solid rgba(255,255,255,.07);
-  border-radius:var(--rs);color:var(--white);font-family:var(--font);font-size:1rem;outline:none;transition:border .2s}
-input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
+  width:100%;padding:14px 16px;background:rgba(18,21,46,.8);border:1.5px solid rgba(255,255,255,.06);
+  border-radius:var(--rs);color:var(--white);font-family:var(--font);font-size:1rem;outline:none;transition:border .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,232,255,.12),inset 0 0 8px rgba(0,232,255,.04)}
 select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%238887a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 12L2 5h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 select option{background:var(--bg2)}
 
 /*───────────────────────────────────────────
   TOP BAR (back / settings gear)
 ───────────────────────────────────────────*/
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 8px;position:sticky;top:0;z-index:60;background:var(--bg)}
-.ib{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;background:var(--bg3);cursor:pointer;transition:background .15s}
-.ib:active{background:var(--bg4)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;position:sticky;top:0;z-index:60;background:linear-gradient(180deg,var(--bg) 70%,transparent)}
+.ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.05);background:rgba(18,21,46,.7);cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
+.ib:active{background:rgba(0,232,255,.08);border-color:rgba(0,232,255,.2);box-shadow:var(--neon-line)}
 .ib svg{width:20px;height:20px;stroke:var(--text);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.topbar h2{font-weight:800;font-size:1.05rem;color:var(--white);flex:1;text-align:center}
+.topbar h2{font-weight:800;font-size:1.05rem;color:var(--white);flex:1;text-align:center;letter-spacing:1px}
 
 /*───────────────────────────────────────────
   GAME GRID (2-col with thumbnail placeholder)
 ───────────────────────────────────────────*/
-.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gc{background:var(--bg2);border:1px solid rgba(255,255,255,.05);border-radius:var(--r);cursor:pointer;transition:transform .15s,border-color .25s;overflow:hidden}
-.gc:active{transform:scale(.97);border-color:rgba(255,45,123,.25)}
-.gc-thumb{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.gc-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,123,.06),rgba(0,232,255,.06))}
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gc{background:linear-gradient(160deg,rgba(12,14,36,.9),rgba(18,21,46,.7));border:1px solid rgba(255,255,255,.05);border-radius:20px;cursor:pointer;transition:transform .2s,border-color .3s,box-shadow .3s;overflow:hidden;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.gc:active{transform:scale(.96);border-color:rgba(0,232,255,.25);box-shadow:0 0 24px rgba(0,232,255,.08),0 4px 20px rgba(0,0,0,.3)}
+.gc-thumb{width:100%;aspect-ratio:4/3;background:linear-gradient(160deg,rgba(18,21,46,.6),rgba(26,29,58,.4));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.gc-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,45,123,.03),rgba(0,232,255,.03));pointer-events:none}
+.gc-thumb::before{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(12,14,36,.9),transparent);z-index:2;pointer-events:none}
 .gc-thumb img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
 .gc-thumb svg{width:100%;height:100%;position:relative;z-index:1}
-.gc-info{padding:10px 12px}
-.gc-info h3{font-weight:800;font-size:.85rem;color:var(--white);margin-bottom:2px;line-height:1.3}
+.gc-info{padding:12px 14px}
+.gc-info h3{font-weight:800;font-size:.88rem;color:var(--white);margin-bottom:3px;line-height:1.3;letter-spacing:.3px}
 .gc-info p{font-size:.7rem;color:var(--text2);line-height:1.3}
 
 /*───────────────────────────────────────────
   PLAYER CHIPS
 ───────────────────────────────────────────*/
-.pc{display:inline-flex;align-items:center;gap:6px;padding:7px 14px 7px 8px;border-radius:30px;background:var(--bg3);border:1px solid rgba(255,255,255,.06);font-size:.85rem;margin:3px;color:var(--white)}
-.pc .av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:var(--white)}
-.pc .rm{cursor:pointer;opacity:.4;margin-left:4px;font-size:.9rem}
+.pc{display:inline-flex;align-items:center;gap:7px;padding:8px 16px 8px 9px;border-radius:30px;background:linear-gradient(135deg,rgba(18,21,46,.8),rgba(26,29,58,.6));border:1px solid rgba(255,255,255,.05);font-size:.85rem;margin:3px;color:var(--white);transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.pc .av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:var(--white);box-shadow:0 0 8px rgba(0,0,0,.3),inset 0 1px 2px rgba(255,255,255,.15)}
+.pc .rm{cursor:pointer;opacity:.4;margin-left:4px;font-size:.9rem;transition:opacity .15s}
 .pc .rm:hover{opacity:1;color:var(--pink)}
 
 /* avatar palette */
@@ -106,8 +113,8 @@ select option{background:var(--bg2)}
 /*───────────────────────────────────────────
   EMOJI PICK (replaced with colour avatars)
 ───────────────────────────────────────────*/
-.cpick{width:42px;height:42px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border .15s,transform .15s;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff}
-.cpick.sel{border-color:var(--white);transform:scale(1.15)}
+.cpick{width:42px;height:42px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border .15s,transform .18s,box-shadow .2s;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff}
+.cpick.sel{border-color:var(--white);transform:scale(1.18);box-shadow:0 0 14px rgba(255,255,255,.15)}
 
 /*───────────────────────────────────────────
   ANIMATIONS
@@ -233,40 +240,52 @@ select option{background:var(--bg2)}
 @keyframes tapBlink{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* 5sec stop */
-.stop-ring{width:200px;height:200px;border-radius:50%;margin:24px auto;border:6px solid var(--bg4);position:relative;display:flex;align-items:center;justify-content:center;transition:border-color .2s,box-shadow .2s}
-.stop-ring.running{border-color:var(--cyan);box-shadow:var(--gc)}
-.stop-ring.stopped{border-color:var(--gold);box-shadow:var(--gg)}
-.stop-ring.fail{border-color:var(--pink);box-shadow:var(--gp)}
-.stop-time{font-weight:900;font-size:3rem;font-variant-numeric:tabular-nums;color:var(--white)}
+.stop-ring{width:200px;height:200px;border-radius:50%;margin:24px auto;border:6px solid var(--bg4);position:relative;display:flex;align-items:center;justify-content:center;transition:border-color .3s,box-shadow .3s;background:linear-gradient(160deg,rgba(15,14,24,.6),rgba(8,7,13,.8))}
+.stop-ring.running{border-color:var(--cyan);box-shadow:var(--gc),inset 0 0 30px rgba(0,232,255,.05)}
+.stop-ring.stopped{border-color:var(--gold);box-shadow:var(--gg),inset 0 0 30px rgba(255,200,55,.05)}
+.stop-ring.fail{border-color:var(--pink);box-shadow:var(--gp),inset 0 0 30px rgba(255,45,123,.05)}
+.stop-time{font-weight:900;font-size:3.2rem;font-variant-numeric:tabular-nums;color:var(--white);text-shadow:0 0 20px rgba(255,255,255,.1)}
 
-.turn{text-align:center;padding:10px 14px;border-radius:var(--rs);background:var(--bg3);margin-bottom:10px;font-weight:700;font-size:.9rem;border-left:3px solid var(--pink)}
+.turn{text-align:center;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,var(--bg3),var(--bg4));margin-bottom:10px;font-weight:700;font-size:.9rem;border:1px solid rgba(255,255,255,.05);border-left:3px solid var(--pink)}
+
+/* Memory game cards */
+.mem-card{aspect-ratio:3/4;perspective:500px;cursor:pointer}
+.mem-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .4s ease}
+.mem-card.flipped .mem-card-inner{transform:rotateY(180deg)}
+.mem-card.matched .mem-card-inner{transform:rotateY(180deg)}
+.mem-card.matched{opacity:.5;pointer-events:none}
+.mem-card-front,.mem-card-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center}
+.mem-card-front{background:linear-gradient(145deg,var(--bg3),var(--bg4));border:2px solid rgba(255,255,255,.08);font-size:1.4rem;font-weight:900;color:rgba(255,255,255,.2)}
+.mem-card-front::after{content:'';position:absolute;inset:0;border-radius:12px;opacity:.06;background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(255,255,255,.3) 4px,rgba(255,255,255,.3) 5px)}
+.mem-card-back{transform:rotateY(180deg);background:linear-gradient(160deg,var(--bg2),var(--bg3));border:2px solid rgba(0,232,255,.2);font-size:1.8rem}
+.mem-card:active:not(.flipped):not(.matched){transform:scale(.95)}
 
 /*───────────────────────────────────────────
   FULLSCREEN EVENT
 ───────────────────────────────────────────*/
-.fse{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;flex-direction:column;padding:28px;text-align:center}
+.fse{position:fixed;inset:0;z-index:300;background:rgba(6,7,26,.96);backdrop-filter:blur(28px);display:none;align-items:center;justify-content:center;flex-direction:column;padding:28px;text-align:center}
 .fse.on{display:flex}
-.fse .fi{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:bounceIn .5s ease}
+.fse .fi{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px;animation:bounceIn .5s ease;box-shadow:0 0 40px rgba(0,232,255,.12),0 0 80px rgba(255,45,123,.06);border:1px solid rgba(255,255,255,.06)}
 .fse .fi svg{width:48px;height:48px}
-.fse .ft{font-weight:900;font-size:clamp(1.3rem,5vw,1.9rem);line-height:1.5;margin-bottom:24px;max-width:340px;color:var(--white)}
-.fse .fc{font-size:.8rem;padding:5px 14px;border-radius:20px;margin-bottom:14px;font-weight:700}
+.fse .ft{font-weight:900;font-size:clamp(1.4rem,5vw,2rem);line-height:1.5;margin-bottom:28px;max-width:340px;color:var(--white);text-shadow:0 0 20px rgba(255,255,255,.06)}
+.fse .fc{font-size:.8rem;padding:6px 18px;border-radius:20px;margin-bottom:16px;font-weight:700;letter-spacing:.5px}
 
 /*───────────────────────────────────────────
   OVERLAY
 ───────────────────────────────────────────*/
-.ov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:20px}
+.ov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px}
 .ov.on{display:flex}
-.ov-c{background:var(--bg2);border:1px solid rgba(255,45,123,.2);border-radius:var(--r);padding:28px 22px;max-width:380px;width:100%;text-align:center;animation:bounceIn .45s ease;box-shadow:0 0 60px rgba(255,45,123,.12)}
+.ov-c{background:linear-gradient(160deg,var(--bg2),var(--bg3));border:1px solid rgba(255,45,123,.2);border-radius:20px;padding:32px 24px;max-width:380px;width:100%;text-align:center;animation:bounceIn .45s ease;box-shadow:0 0 80px rgba(255,45,123,.12),0 0 200px rgba(255,45,123,.04)}
 
 .confetti-piece{position:fixed;top:-10px;z-index:250;border-radius:2px;animation:confetti 3s linear forwards;pointer-events:none}
 
 /*───────────────────────────────────────────
   SETTINGS
 ───────────────────────────────────────────*/
-.sr{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.tgl{width:48px;height:26px;border-radius:13px;background:var(--bg4);border:none;position:relative;cursor:pointer;transition:background .2s}
-.tgl.on{background:var(--pink)}
-.tgl::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.tgl{width:50px;height:28px;border-radius:14px;background:var(--bg4);border:1px solid rgba(255,255,255,.06);position:relative;cursor:pointer;transition:background .25s,border-color .25s}
+.tgl.on{background:var(--pink);border-color:rgba(255,45,123,.3);box-shadow:0 0 12px rgba(255,45,123,.2)}
+.tgl::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .tgl.on::after{transform:translateX(22px)}
 
 .pi{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--rs);margin-bottom:6px}
@@ -276,8 +295,9 @@ select option{background:var(--bg2)}
 /*───────────────────────────────────────────
   SECTION LABEL
 ───────────────────────────────────────────*/
-.slbl{font-size:.75rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin:28px 0 10px;display:flex;align-items:center;gap:8px}
-.slbl::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.slbl{font-size:.72rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan);margin:30px 0 14px;display:flex;align-items:center;gap:10px;text-shadow:0 0 12px rgba(0,232,255,.25)}
+.slbl::before{content:'';width:3px;height:16px;border-radius:2px;background:linear-gradient(180deg,var(--cyan),var(--purple));box-shadow:0 0 8px rgba(0,232,255,.3)}
+.slbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,232,255,.12),transparent)}
 
 /* grid */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -299,48 +319,57 @@ select option{background:var(--bg2)}
      SVG SPRITE (hidden)
      ============================================================ -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <linearGradient id="ig-pink" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d7b"/><stop offset="100%" stop-color="#ff6b9d"/></linearGradient>
+    <linearGradient id="ig-cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00e8ff"/><stop offset="100%" stop-color="#5bdbf5"/></linearGradient>
+    <linearGradient id="ig-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffc837"/><stop offset="100%" stop-color="#ff8008"/></linearGradient>
+    <linearGradient id="ig-purple" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6366f1"/></linearGradient>
+    <linearGradient id="ig-green" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient>
+    <linearGradient id="ig-fire" x1="0" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#ffc837"/><stop offset="40%" stop-color="#ff8008"/><stop offset="100%" stop-color="#ff2d7b"/></linearGradient>
+    <linearGradient id="ig-heart" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d7b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient>
+  </defs>
   <!-- back arrow -->
-  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1" opacity=".15"/><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <!-- gear -->
-  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5" fill="url(#ig-purple)" stroke="none"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="url(#ig-purple)" stroke-width="1.5" fill="none"/></symbol>
   <!-- target / roulette -->
-  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="url(#ig-gold)" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="6" stroke="url(#ig-pink)" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="2.5" fill="url(#ig-pink)" stroke="none"/><line x1="12" y1="2" x2="12" y2="6" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="22" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="12" x2="6" y2="12" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><line x1="18" y1="12" x2="22" y2="12" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/></symbol>
   <!-- coin -->
-  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 9.5C8 8.12 9.79 7 12 7s4 1.12 4 2.5S14.21 12 12 12 8 13.12 8 14.5 9.79 17 12 17s4-1.12 4-2.5"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#ig-gold)" stroke="#b8860b" stroke-width="1"/><circle cx="12" cy="12" r="7.5" fill="none" stroke="rgba(0,0,0,.15)" stroke-width="1"/><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="900" fill="#7a5a00" font-family="serif">$</text><ellipse cx="12" cy="4" rx="5" ry="1.5" fill="rgba(255,255,255,.2)"/></symbol>
   <!-- tongue / mouth -->
-  <symbol id="i-mouth" viewBox="0 0 24 24"><path d="M5 12a7 7 0 0 0 14 0"/><path d="M9 10V8M15 10V8"/><circle cx="12" cy="12" r="10"/></symbol>
-  <!-- train -->
-  <symbol id="i-train" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="16" rx="3"/><path d="M4 11h16"/><path d="M12 3v16"/><circle cx="8" cy="22" r="1"/><circle cx="16" cy="22" r="1"/><path d="M6 19l-2 3M18 19l2 3"/></symbol>
+  <symbol id="i-mouth" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#ig-purple)" opacity=".15" stroke="url(#ig-purple)" stroke-width="1.5"/><path d="M7 13c0 3 2.24 5.5 5 5.5s5-2.5 5-5.5" fill="url(#ig-pink)" stroke="url(#ig-pink)" stroke-width="1.5"/><circle cx="8.5" cy="9" r="1.5" fill="url(#ig-cyan)"/><circle cx="15.5" cy="9" r="1.5" fill="url(#ig-cyan)"/><path d="M10 15.5c0 1.5.9 2.5 2 2.5s2-1 2-2.5" fill="#ff6b9d" stroke="none"/></symbol>
+  <!-- train (kept for compat) -->
+  <symbol id="i-train" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="14" rx="4" fill="url(#ig-green)" opacity=".15" stroke="url(#ig-green)" stroke-width="1.5"/><path d="M4 11h16" stroke="url(#ig-green)" stroke-width="1" opacity=".5"/><circle cx="8" cy="20" r="1.5" fill="url(#ig-green)"/><circle cx="16" cy="20" r="1.5" fill="url(#ig-green)"/><path d="M7 17l-2 4M17 17l2 4" stroke="url(#ig-green)" stroke-width="1.5" stroke-linecap="round"/></symbol>
   <!-- people (minority) -->
-  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 1 4 4v2"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="8" cy="6.5" r="3" fill="url(#ig-cyan)" opacity=".8"/><circle cx="16" cy="6.5" r="3" fill="url(#ig-pink)" opacity=".8"/><path d="M1.5 21v-1.5a4.5 4.5 0 0 1 4.5-4.5h4a4.5 4.5 0 0 1 4.5 4.5V21" fill="url(#ig-cyan)" opacity=".2" stroke="url(#ig-cyan)" stroke-width="1.5"/><path d="M16 11a4.5 4.5 0 0 1 4.5 4.5V21" fill="none" stroke="url(#ig-pink)" stroke-width="1.5" stroke-linecap="round"/></symbol>
   <!-- laugh (ogiri) -->
-  <symbol id="i-laugh" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></symbol>
+  <symbol id="i-laugh" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#ig-gold)" opacity=".15" stroke="url(#ig-gold)" stroke-width="1.5"/><path d="M7 13s2 4 5 4 5-4 5-4" fill="url(#ig-gold)" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><path d="M8 8.5L10 10M14 10l2-1.5" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="10.5" r=".7" fill="url(#ig-gold)"/><circle cx="15" cy="10.5" r=".7" fill="url(#ig-gold)"/></symbol>
   <!-- heart (question) -->
-  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="url(#ig-heart)" stroke="none" opacity=".9"/><ellipse cx="9" cy="9" rx="2.5" ry="1.5" fill="rgba(255,255,255,.25)" transform="rotate(-30 9 9)"/></symbol>
   <!-- fire (truth or dare) -->
-  <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 2c.5 3.5 4 6 4 10a6 6 0 0 1-12 0c0-4 3.5-6.5 4-10 1 2 3 3 4 0z"/></symbol>
+  <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 2c.5 3.5 4 6 4 10a6 6 0 0 1-12 0c0-4 3.5-6.5 4-10 1 2 3 3 4 0z" fill="url(#ig-fire)" stroke="none"/><path d="M12 12c.3 1.5 2 2.5 2 4.5a2.5 2.5 0 0 1-5 0c0-2 1.7-3 2-4.5" fill="#ffc837" stroke="none" opacity=".7"/></symbol>
   <!-- dice -->
-  <symbol id="i-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="16" r="1.2" fill="currentColor"/><circle cx="16" cy="16" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="rgba(255,255,255,.9)" stroke="rgba(0,0,0,.1)" stroke-width=".5"/><circle cx="8" cy="8" r="1.8" fill="#1a1a2e"/><circle cx="16" cy="8" r="1.8" fill="#1a1a2e"/><circle cx="8" cy="16" r="1.8" fill="#1a1a2e"/><circle cx="16" cy="16" r="1.8" fill="#1a1a2e"/><circle cx="12" cy="12" r="1.8" fill="url(#ig-pink)"/></symbol>
   <!-- drink -->
-  <symbol id="i-drink" viewBox="0 0 24 24"><path d="M8 2h8l-1 9H9L8 2z"/><path d="M9 11h6v2a5 5 0 0 1-6 0v-2z"/><path d="M12 16v4"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-drink" viewBox="0 0 24 24"><path d="M7 2h10l-1.5 10h-7L7 2z" fill="url(#ig-gold)" opacity=".2" stroke="url(#ig-gold)" stroke-width="1.5" stroke-linejoin="round"/><path d="M9.5 5h5" stroke="rgba(255,255,255,.4)" stroke-width="1" stroke-linecap="round"/><path d="M12 12v5" stroke="url(#ig-gold)" stroke-width="2" stroke-linecap="round"/><path d="M8 20h8" stroke="url(#ig-gold)" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="4" r="1.5" fill="url(#ig-gold)" opacity=".6"/><circle cx="16.5" cy="2.5" r="1" fill="url(#ig-gold)" opacity=".4"/></symbol>
   <!-- kiss -->
-  <symbol id="i-kiss" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><circle cx="12" cy="13" r="2"/></symbol>
+  <symbol id="i-kiss" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="url(#ig-pink)" stroke="none" opacity=".85"/><ellipse cx="9" cy="9" rx="2" ry="1.2" fill="rgba(255,255,255,.2)" transform="rotate(-30 9 9)"/><path d="M10 14l2-1 2 1-2 1z" fill="#fff" opacity=".6"/></symbol>
   <!-- star -->
-  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#ig-gold)" stroke="none"/><path d="M12 5l1.8 3.6 4 .6-2.9 2.8.68 4L12 14.1l-3.58 1.9.68-4-2.9-2.8 4-.6L12 5z" fill="rgba(255,255,255,.2)" stroke="none"/></symbol>
   <!-- shuffle -->
-  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5" stroke="url(#ig-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M4 20L21 3" stroke="url(#ig-purple)" stroke-width="2" stroke-linecap="round"/><path d="M21 16v5h-5" stroke="url(#ig-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15 15l6 6" stroke="url(#ig-cyan)" stroke-width="2" stroke-linecap="round"/><path d="M4 4l5 5" stroke="url(#ig-purple)" stroke-width="2" stroke-linecap="round"/></symbol>
   <!-- help circle -->
-  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#ig-cyan)" opacity=".12" stroke="url(#ig-cyan)" stroke-width="1.5"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="url(#ig-cyan)" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="12" cy="17" r="1" fill="url(#ig-cyan)"/></symbol>
   <!-- random / zap -->
-  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="url(#ig-gold)" stroke="none"/><polygon points="13 5 6 13 12 13 11.5 19 18 11 12.5 11 13 5" fill="rgba(255,255,255,.25)" stroke="none"/></symbol>
   <!-- crown -->
-  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M2 20h20L19 8l-5 4-2-6-2 6-5-4-1 12z"/><rect x="2" y="20" width="20" height="2" rx="1"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M2 20h20L19 8l-5 4-2-6-2 6-5-4-1 12z" fill="url(#ig-gold)" stroke="none"/><rect x="2" y="20" width="20" height="2.5" rx="1" fill="url(#ig-gold)"/><circle cx="7" cy="11" r="1.2" fill="rgba(255,255,255,.35)"/><circle cx="12" cy="8" r="1.2" fill="rgba(255,255,255,.35)"/><circle cx="17" cy="11" r="1.2" fill="rgba(255,255,255,.35)"/></symbol>
   <!-- skull -->
-  <symbol id="i-skull" viewBox="0 0 24 24"><circle cx="12" cy="10" r="8"/><path d="M9 14h.01M15 14h.01"/><path d="M10 18h4v3h-4z"/><path d="M11 21v1M13 21v1"/></symbol>
+  <symbol id="i-skull" viewBox="0 0 24 24"><circle cx="12" cy="10" r="8" fill="rgba(255,255,255,.9)" stroke="none"/><ellipse cx="8.5" cy="10" rx="2.2" ry="2.5" fill="#1a1a2e"/><ellipse cx="15.5" cy="10" rx="2.2" ry="2.5" fill="#1a1a2e"/><path d="M10 18h4v4h-4z" fill="rgba(255,255,255,.9)" stroke="none"/><line x1="11" y1="18" x2="11" y2="22" stroke="#1a1a2e" stroke-width="1"/><line x1="13" y1="18" x2="13" y2="22" stroke="#1a1a2e" stroke-width="1"/><path d="M9 15.5c1 1 2 1.2 3 1.2s2-.2 3-1.2" fill="none" stroke="#1a1a2e" stroke-width="1.2" stroke-linecap="round"/></symbol>
   <!-- timer -->
-  <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="9"/><path d="M12 9v4l2.5 1.5"/><path d="M10 2h4M12 2v2"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="9" fill="url(#ig-cyan)" opacity=".1" stroke="url(#ig-cyan)" stroke-width="1.5"/><path d="M12 9v4.5l3 1.5" stroke="url(#ig-pink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="9.5" y="1.5" width="5" height="2.5" rx="1" fill="url(#ig-cyan)"/></symbol>
   <!-- image placeholder -->
-  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="url(#ig-purple)" opacity=".1" stroke="url(#ig-purple)" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="2" fill="url(#ig-gold)"/><path d="M21 15l-5-5L5 21" fill="url(#ig-green)" opacity=".3" stroke="url(#ig-green)" stroke-width="1.5" stroke-linejoin="round"/></symbol>
 </svg>
 
 <!-- ============================================================
@@ -427,18 +456,24 @@ select option{background:var(--bg2)}
         <rect x="98" y="80" width="14" height="5" rx="2.5" fill="#a855f7" opacity=".3"/>
       </svg>
     </div><div class="gc-info"><h3>早口言葉</h3><p>噛んだら飲む！</p></div></div>
-    <div class="gc" onclick="launch('word')"><div class="gc-thumb" id="thumb-word">
+    <div class="gc" onclick="launch('memory')"><div class="gc-thumb" id="thumb-memory">
       <svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gw1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00c2d4"/><stop offset="100%" stop-color="#5bdbf5"/></linearGradient></defs>
-        <circle cx="80" cy="58" r="38" fill="none" stroke="url(#gw1)" stroke-width="3" stroke-dasharray="8 4"/>
-        <circle cx="80" cy="58" r="28" fill="none" stroke="rgba(0,194,212,.2)" stroke-width="1.5"/>
-        <circle cx="80" cy="30" r="5" fill="#00c2d4"/><circle cx="108" cy="42" r="5" fill="#5bdbf5"/>
-        <circle cx="112" cy="66" r="5" fill="#00c2d4"/><circle cx="98" cy="88" r="5" fill="#5bdbf5"/>
-        <circle cx="62" cy="88" r="5" fill="#00c2d4"/><circle cx="48" cy="66" r="5" fill="#5bdbf5"/>
-        <circle cx="52" cy="42" r="5" fill="#00c2d4"/>
-        <text x="80" y="63" text-anchor="middle" font-size="16" font-weight="900" fill="rgba(0,194,212,.8)" font-family="sans-serif">🚃</text>
+        <rect x="18" y="18" width="32" height="40" rx="5" fill="rgba(0,194,212,.15)" stroke="#00c2d4" stroke-width="2"/>
+        <text x="34" y="44" text-anchor="middle" font-size="18">🍺</text>
+        <rect x="56" y="18" width="32" height="40" rx="5" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+        <text x="72" y="44" text-anchor="middle" font-size="18">🍺</text>
+        <rect x="94" y="18" width="32" height="40" rx="5" fill="rgba(255,45,123,.08)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+        <text x="110" y="44" text-anchor="middle" font-size="16" fill="rgba(255,255,255,.25)" font-weight="900">？</text>
+        <rect x="18" y="64" width="32" height="40" rx="5" fill="rgba(255,45,123,.08)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+        <text x="34" y="90" text-anchor="middle" font-size="16" fill="rgba(255,255,255,.25)" font-weight="900">？</text>
+        <rect x="56" y="64" width="32" height="40" rx="5" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="2"/>
+        <text x="72" y="90" text-anchor="middle" font-size="18">🎲</text>
+        <rect x="94" y="64" width="32" height="40" rx="5" fill="rgba(255,45,123,.08)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+        <text x="110" y="90" text-anchor="middle" font-size="16" fill="rgba(255,255,255,.25)" font-weight="900">？</text>
+        <line x1="50" y1="38" x2="56" y2="38" stroke="#00c2d4" stroke-width="1.5" stroke-dasharray="2 2" opacity=".5"/>
       </svg>
-    </div><div class="gc-info"><h3>山手線ゲーム</h3><p>詰まったら飲む！</p></div></div>
+    </div><div class="gc-info"><h3>神経衰弱</h3><p>揃えられなかったら飲む！</p></div></div>
     <div class="gc" onclick="launch('minority')"><div class="gc-thumb" id="thumb-minority">
       <svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gm1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff2d7b"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
@@ -523,7 +558,7 @@ select option{background:var(--bg2)}
         <circle cx="57" cy="31" r="6" fill="url(#gsg1)" stroke="#fff" stroke-width="1.5"/>
         <path d="M68 31 L98 31" stroke="url(#gsg1)" stroke-width="1.5" stroke-dasharray="3 3" opacity=".5"/>
       </svg>
-    </div><div class="gc-info"><h3>すごろく</h3><p>飲み＆エロすごろく！</p></div></div>
+    </div><div class="gc-info"><h3>すごろく</h3><p>止まったマスのお題は絶対！<br>新感覚すごろく！</p></div></div>
   </div>
 
   <div style="height:24px"></div>
@@ -633,19 +668,25 @@ select option{background:var(--bg2)}
 </div>
 
 <!-- ============================================================
-     SCREEN: WORD GAME
+     SCREEN: MEMORY GAME
      ============================================================ -->
-<div id="s-word" class="scr">
-<div class="mw" style="text-align:center">
-  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>山手線ゲーム</h2><div style="width:42px"></div></div>
-  <div class="card" style="margin-bottom:14px">
-    <div style="font-size:.8rem;color:var(--text2);margin-bottom:4px">お題</div>
-    <div id="w-topic" style="font-weight:900;font-size:1.4rem;color:var(--white)">---</div>
+<div id="s-memory" class="scr">
+<div class="mw">
+  <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>神経衰弱</h2><div style="width:42px"></div></div>
+
+  <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
+    <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
+    <div style="font-size:.75rem;color:var(--text);line-height:1.7">
+      カードを2枚めくって同じ絵柄ならゲット！<br>
+      <span style="color:var(--pink);font-weight:700">揃わなかったら1杯飲む！</span><br>
+      一番多く揃えた人が優勝！
+    </div>
   </div>
-  <div class="timer" id="w-timer">10</div>
-  <div id="w-who" style="margin:10px 0;font-weight:800;font-size:1.05rem;color:var(--cyan)"></div>
-  <div class="g2" style="margin-top:14px"><button class="btn bc" onclick="startW()">スタート</button><button class="btn bp" onclick="failW()">アウト！飲む！</button></div>
-  <button class="btn bg" onclick="nextW()" style="margin-top:10px">セーフ → 次の人</button>
+
+  <div id="mem-who" style="font-weight:800;font-size:1.1rem;margin:10px 0;color:var(--cyan);text-align:center"></div>
+  <div id="mem-score" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px"></div>
+  <div id="mem-board" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px"></div>
+  <button class="btn bg" onclick="startMem()" id="mem-btn">ゲームスタート</button>
 </div>
 </div>
 
@@ -706,22 +747,33 @@ select option{background:var(--bg2)}
 <div id="s-truth" class="scr">
 <div class="mw" style="text-align:center">
   <div class="topbar"><button class="ib" onclick="go('s-home')"><svg><use href="#i-back"/></svg></button><h2>Truth or Dare</h2><div style="width:42px"></div></div>
-  <div id="td-who" style="font-weight:800;font-size:1.2rem;margin:14px 0;color:var(--cyan)"></div>
-  <div class="g2" style="margin:20px 0">
-    <button class="btn bc" onclick="tdPick('truth')" style="height:110px;flex-direction:column;gap:6px">
-      <svg style="width:32px;height:32px;stroke:var(--bg);fill:none;stroke-width:2"><use href="#i-help"/></svg>
-      <span style="font-size:1.1rem;font-weight:900">Truth</span><span style="font-size:.7rem;opacity:.7">真実を話す</span>
+
+  <!-- ルール説明 -->
+  <div class="card" style="text-align:left;margin-bottom:16px;padding:14px 16px;border:1px solid rgba(168,85,247,.15);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.04))">
+    <div style="font-weight:800;font-size:.85rem;color:var(--cyan);margin-bottom:6px">遊び方</div>
+    <div style="font-size:.78rem;color:var(--text);line-height:1.7">
+      <span style="color:var(--cyan);font-weight:700">Truth</span> か <span style="color:var(--pink);font-weight:700">Dare</span> を選んでね！<br>
+      <span style="color:var(--cyan)">Truth</span> → 出された質問に<strong style="color:var(--white)">正直に</strong>答える<br>
+      <span style="color:var(--pink)">Dare</span> → 出されたお題に<strong style="color:var(--white)">挑戦</strong>する<br>
+      <span style="color:var(--gold)">※ 拒否したら罰ゲーム（1杯飲む）！</span>
+    </div>
+  </div>
+
+  <div id="td-who" style="font-weight:800;font-size:1.2rem;margin:10px 0 16px;color:var(--white)"></div>
+  <div class="g2" style="margin:0 0 20px">
+    <button class="btn bc" onclick="tdPick('truth')" style="height:120px;flex-direction:column;gap:8px;border-radius:16px">
+      <svg style="width:36px;height:36px"><use href="#i-help"/></svg>
+      <span style="font-size:1.2rem;font-weight:900">Truth</span><span style="font-size:.72rem;opacity:.7">真実を話す</span>
     </button>
-    <button class="btn bp" onclick="tdPick('dare')" style="height:110px;flex-direction:column;gap:6px">
-      <svg style="width:32px;height:32px;stroke:var(--white);fill:none;stroke-width:2"><use href="#i-fire"/></svg>
-      <span style="font-size:1.1rem;font-weight:900">Dare</span><span style="font-size:.7rem;opacity:.7">挑戦する</span>
+    <button class="btn bp" onclick="tdPick('dare')" style="height:120px;flex-direction:column;gap:8px;border-radius:16px">
+      <svg style="width:36px;height:36px"><use href="#i-fire"/></svg>
+      <span style="font-size:1.2rem;font-weight:900">Dare</span><span style="font-size:.72rem;opacity:.7">挑戦する</span>
     </button>
   </div>
-  <div class="card" id="td-card" style="display:none;min-height:90px;align-items:center;justify-content:center;border:1px solid rgba(255,45,123,.12)">
-    <div id="td-text" style="font-weight:800;font-size:1.05rem;line-height:1.5;color:var(--white)"></div>
+  <div class="card" id="td-card" style="display:none;min-height:100px;align-items:center;justify-content:center;border:1px solid rgba(255,45,123,.15);padding:24px 20px">
+    <div id="td-text" style="font-weight:800;font-size:1.15rem;line-height:1.6;color:var(--white)"></div>
   </div>
-  <div style="font-size:.8rem;color:var(--text2);margin:8px 0">※拒否したら1杯飲む！</div>
-  <button class="btn bg" onclick="tdNext()" style="margin-top:10px">次の人へ</button>
+  <button class="btn bg" onclick="tdNext()" style="margin-top:16px">次の人へ</button>
 </div>
 </div>
 
@@ -818,6 +870,7 @@ function launch(g){
   if(g==='truth')tdNext();
   if(g==='stop5')s5Init();
   if(g==='sugoroku')startSG();
+  if(g==='memory')startMem();
 }
 
 /* ═══════ PLAYERS ═══════ */
@@ -867,7 +920,7 @@ function showRes(iconSvg,title,desc,pun){
   document.getElementById('ov-res').classList.add('on');confetti();fanfare();
 }
 function closeRes(){document.getElementById('ov-res').classList.remove('on')}
-function pIcon(id,color,sz){return `<svg style="width:${sz||52}px;height:${sz||52}px;stroke:${color};fill:none;stroke-width:2"><use href="#${id}"/></svg>`}
+function pIcon(id,color,sz){return `<svg style="width:${sz||52}px;height:${sz||52}px"><use href="#${id}"/></svg>`}
 
 /* ═══════ ROULETTE ═══════ */
 let rlAng=0;
@@ -921,17 +974,58 @@ function startTT(){
 }
 function failTT(){if(ttTmr){clearInterval(ttTmr);ttTmr=null}const p=S.players[ttPi];showRes(pIcon('i-mouth','var(--cyan)'),p.name+' 失敗！','噛んじゃった！飲め！',rndPun());ttPi=(ttPi+1)%S.players.length}
 
-/* ═══════ WORD GAME ═══════ */
-const WT=['果物の名前','動物の名前','芸能人','都道府県','ラーメンの種類','コンビニの商品','スポーツ選手','映画のタイトル','お酒の種類','カラオケの定番曲','駅名','寿司ネタ','国の名前','アニメキャラ'];
-let wTmr=null,wPi=0;
-function startW(){if(wTmr)clearInterval(wTmr);document.getElementById('w-topic').textContent=WT[~~(Math.random()*WT.length)];wPi=0;wTurn();se()}
-function wTurn(){
-  if(wTmr)clearInterval(wTmr);let t=10;const te=document.getElementById('w-timer');te.textContent=t;te.classList.remove('dng');
-  document.getElementById('w-who').textContent=S.players[wPi%S.players.length].name+' の番！';
-  wTmr=setInterval(()=>{t--;te.textContent=t;if(t<=3)te.classList.add('dng');if(t<=0){clearInterval(wTmr);wTmr=null;failW()}},1e3);
+/* ═══════ MEMORY GAME ═══════ */
+const MEM_ICONS=['🍺','🍷','🍸','🎲','🎯','💀','👑','🔥'];
+let memCards=[],memFlipped=[],memLock=false,memPi=0,memScores=[];
+function startMem(){
+  if(S.players.length<2){alert('プレイヤーを2人以上登録してね！');return}
+  const pairs=8;const icons=MEM_ICONS.slice(0,pairs);
+  memCards=[...icons,...icons].sort(()=>Math.random()-.5);
+  memFlipped=[];memLock=false;memPi=0;memScores=S.players.map(()=>0);
+  document.getElementById('mem-btn').style.display='none';
+  renderMemBoard();renderMemScore();updMemWho();se();
 }
-function nextW(){wPi++;wTurn();se()}
-function failW(){if(wTmr){clearInterval(wTmr);wTmr=null}const p=S.players[wPi%S.players.length];showRes(pIcon('i-train','var(--purple)'),p.name+' アウト！','詰まった！飲め！',rndPun())}
+function renderMemBoard(){
+  const b=document.getElementById('mem-board');
+  b.innerHTML=memCards.map((icon,i)=>{
+    const isFlipped=memFlipped.includes(i);
+    const isMatched=memCards[i]==='✓';
+    return `<div class="mem-card ${isFlipped?'flipped':''} ${isMatched?'matched':''}" onclick="memTap(${i})"><div class="mem-card-inner"><div class="mem-card-front">？</div><div class="mem-card-back">${isMatched?'✓':icon}</div></div></div>`;
+  }).join('');
+}
+function renderMemScore(){
+  document.getElementById('mem-score').innerHTML=S.players.map((p,i)=>`<div class="pc" style="${i===memPi?'border-color:var(--cyan)':''}"><div class="av av${p.ci}">${p.name[0]}</div>${p.name}: ${memScores[i]}</div>`).join('');
+}
+function updMemWho(){document.getElementById('mem-who').textContent=S.players[memPi].name+' のターン'}
+function memTap(i){
+  if(memLock||memFlipped.includes(i)||memCards[i]==='✓')return;
+  memFlipped.push(i);renderMemBoard();se();
+  if(memFlipped.length===2){
+    memLock=true;
+    const [a,b]=memFlipped;
+    if(memCards[a]===memCards[b]){
+      setTimeout(()=>{
+        memScores[memPi]++;memCards[a]='✓';memCards[b]='✓';memFlipped=[];memLock=false;
+        renderMemBoard();renderMemScore();fanfare();
+        if(memCards.every(c=>c==='✓'))memEnd();
+      },700);
+    } else {
+      setTimeout(()=>{
+        memFlipped=[];memLock=false;
+        memPi=(memPi+1)%S.players.length;
+        renderMemBoard();renderMemScore();updMemWho();
+        showRes(pIcon('i-skull','var(--pink)'),S.players[(memPi-1+S.players.length)%S.players.length].name,'ハズレ！1杯飲む！',rndPun());
+      },1000);
+    }
+  }
+}
+function memEnd(){
+  const mx=Math.max(...memScores);const winners=S.players.filter((_,i)=>memScores[i]===mx);
+  const mn=Math.min(...memScores);const losers=S.players.filter((_,i)=>memScores[i]===mn);
+  showRes(pIcon('i-crown','var(--gold)'),winners.map(w=>w.name).join(', ')+' 優勝！',
+    '最多ペア！',losers.length&&losers[0]!==winners[0]?'最下位: '+losers.map(l=>l.name).join(', ')+' → '+rndPun():'');
+  document.getElementById('mem-btn').style.display='';document.getElementById('mem-btn').textContent='もう一回';
+}
 
 /* ═══════ MINORITY ═══════ */
 const MQ=[
@@ -1049,7 +1143,7 @@ function genBoard(){
 function startSG(){
   if(S.players.length<2){alert('プレイヤーを2人以上登録してね！');go('s-home');return}
   if(sg.on)return;
-  sg.board=genBoard();sg.pos=S.players.map(()=>0);sg.cur=0;sg.fin=[];sg.on=true;sg.revealed=new Set();sg.pendingFlip=-1;
+  sg.board=genBoard();sg.pos=S.players.map(()=>0);sg.cur=0;sg.fin=[];sg.on=true;sg.revealed=new Set();
   renderBrd();updTurn();renderStat();se();
 }
 function endSG(){if(!confirm('終了する？'))return;sg.on=false;go('s-home')}
@@ -1064,13 +1158,12 @@ function renderBrd(){
     const cur=S.players.some((_,pi)=>sg.pos[pi]===i&&pi===sg.cur&&!sg.fin.includes(pi));
     const isFlipped=sg.revealed.has(i);
     const isStartGoal=c.t==='start'||c.t==='goal';
-    const isPending=sg.pendingFlip===i;
-    h+=`<div class="cel-wrap ${cur?'cur':''} ${isPending?'pending':''}" id="cel-${i}" ${isPending?`onclick="tapCard(${i})"`:''}>`;
+    h+=`<div class="cel-wrap ${cur?'cur':''}" id="cel-${i}">`;
     h+=`<div class="cel ${(isFlipped||isStartGoal)?'flipped':''}">`;
     // front (face-down)
     h+=`<div class="cel-front"><div class="card-pattern"></div><span class="cn">${i}</span><span class="card-q">?</span>${ph.length&&!isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
     // back (revealed)
-    h+=`<div class="cel-back ${c.cls}"><span class="cn">${i}</span><svg class="ci" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><use href="#${c.ic}"/></svg><span class="lb">${c.lb||''}</span><span class="ev-text">${c.ev||''}</span>${ph.length&&isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
+    h+=`<div class="cel-back ${c.cls}"><span class="cn">${i}</span><svg class="ci" style="width:16px;height:16px"><use href="#${c.ic}"/></svg><span class="lb">${c.lb||''}</span><span class="ev-text">${c.ev||''}</span>${ph.length&&isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
     h+=`</div></div>`;
   });
   h+='</div>';document.getElementById('sg-brd').innerHTML=h;
@@ -1093,7 +1186,7 @@ const DICE_ROT=['rotateX(0) rotateY(0)','rotateX(0) rotateY(-90deg)','rotateX(90
 let dRoll=false,dSpins=0;
 
 function rollD(){
-  if(dRoll||!sg.on||sg.pendingFlip>=0)return;
+  if(dRoll||!sg.on)return;
   if(sg.fin.length>=S.players.length-1){
     const loser=S.players.find((_,i)=>!sg.fin.includes(i));
     showRes(pIcon('i-skull','var(--pink)'),loser?loser.name+' 最下位！':'ゲーム終了','罰ゲーム確定！飲め！',loser?rndPun():'');
@@ -1124,8 +1217,9 @@ function animateHop(pi,fromPos,steps){
         else if(sg.fin.length>=S.players.length-1){const loser=S.players.find((_,i)=>!sg.fin.includes(i));showRes(pIcon('i-skull','var(--pink)'),loser.name+' 最下位！','罰ゲーム確定！飲め！',rndPun());sg.on=false;setTimeout(()=>go('s-home'),400)}
         document.getElementById('sg-dres').textContent='';sg.cur=(sg.cur+1)%S.players.length;updTurn();dRoll=false;return;
       }
-      sg.pos[pi]=np;sg.pendingFlip=np;renderBrd();renderStat();
-      document.getElementById('sg-dres').innerHTML='<span class="tap-hint">カードをタップしてください</span>';
+      sg.pos[pi]=np;sg.revealed.add(np);renderBrd();renderStat();
+      document.getElementById('sg-dres').textContent='';
+      setTimeout(()=>showFSE(sg.board[np]),500);
       return;
     }
     step++;
@@ -1139,17 +1233,10 @@ function animateHop(pi,fromPos,steps){
   hop();
 }
 
-function tapCard(idx){
-  if(sg.pendingFlip!==idx)return;
-  sg.revealed.add(idx);sg.pendingFlip=-1;
-  renderBrd();se();
-  document.getElementById('sg-dres').textContent='';
-  setTimeout(()=>showFSE(sg.board[idx]),500);
-}
 
 function showFSE(c){
   const el=document.getElementById('fse');
-  document.getElementById('fse-icon').innerHTML=`<svg style="width:48px;height:48px;stroke:var(--white);fill:none;stroke-width:2"><use href="#${c.ic}"/></svg>`;
+  document.getElementById('fse-icon').innerHTML=`<svg style="width:48px;height:48px"><use href="#${c.ic}"/></svg>`;
   document.getElementById('fse-icon').style.background=c.cat||'rgba(255,255,255,.1)';
   document.getElementById('fse-text').textContent=c.ev;
   const cat=document.getElementById('fse-cat');cat.textContent=c.lb||c.t;cat.style.background=c.cat||'rgba(255,255,255,.1)';
