@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m http.server 8765)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "Bash(npx -y http-server -p 8765 -c-1)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8765/index.html)",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__figma__generate_figma_design",
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "Bash(npx -y http-server -p 8766 -c-1)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8766/index.html)",
+      "mcp__plugin_playwright_playwright__browser_evaluate"
+    ]
+  }
+}
