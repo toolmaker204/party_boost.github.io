@@ -966,13 +966,6 @@ select option{background:var(--bg2)}
 <div id="s-sugoroku" class="scr">
 <div class="mw">
   <div class="topbar"><button class="ib" onclick="go('s-home')"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button><h2>すごろく</h2><div style="width:42px"></div></div>
-  <div class="card" style="text-align:left;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(0,194,212,.12);background:linear-gradient(135deg,rgba(0,194,212,.04),rgba(168,85,247,.03))">
-    <div style="font-weight:800;font-size:.82rem;color:var(--cyan);margin-bottom:4px">遊び方</div>
-    <div style="font-size:.75rem;color:var(--text);line-height:1.7">
-      サイコロを振ってマスを進もう！止まったマスの指示は絶対！<br>
-      <span style="color:var(--pink);font-weight:700">最後にゴールした人が罰ゲーム！</span>
-    </div>
-  </div>
 
   <div id="sg-game">
     <div class="turn" id="sg-turn"></div>
@@ -1528,13 +1521,17 @@ function endSG(){if(!confirm('終了する？'))return;sg.on=false;go('s-home')}
 if(!sg.revealed)sg.revealed=new Set();
 
 function renderBrd(){
-  let h='<div class="brd">';
+  const cols=window.innerWidth>window.innerHeight?10:5;
+  let h=`<div class="brd" style="grid-template-columns:repeat(${cols},1fr)">`;
   sg.board.forEach((c,i)=>{
     const ph=[];S.players.forEach((p,pi)=>{if(sg.pos[pi]===i&&!sg.fin.includes(pi))ph.push(`<span class="av av${p.ci}" style="width:14px;height:14px;font-size:.35rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center">${p.name[0]}</span>`)});
     const cur=S.players.some((_,pi)=>sg.pos[pi]===i&&pi===sg.cur&&!sg.fin.includes(pi));
     const isFlipped=sg.revealed.has(i);
     const isStartGoal=c.t==='start'||c.t==='goal';
-    h+=`<div class="cel-wrap ${cur?'cur':''}" id="cel-${i}">`;
+    // snake layout: even rows L→R, odd rows R→L
+    const row=Math.floor(i/cols),colInRow=i%cols;
+    const col=row%2===0?colInRow:(cols-1-colInRow);
+    h+=`<div class="cel-wrap ${cur?'cur':''}" id="cel-${i}" style="grid-column:${col+1};grid-row:${row+1}">`;
     h+=`<div class="cel ${(isFlipped||isStartGoal)?'flipped':''}">`;
     // front (face-down)
     h+=`<div class="cel-front"><div class="card-pattern"></div><span class="cn">${i}</span><span class="card-q">?</span>${ph.length&&!isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
@@ -1544,6 +1541,7 @@ function renderBrd(){
   });
   h+='</div>';document.getElementById('sg-brd').innerHTML=h;
 }
+window.addEventListener('resize',()=>{if(sg.on)renderBrd()});
 function updTurn(){
   while(sg.fin.includes(sg.cur)&&sg.fin.length<S.players.length)sg.cur=(sg.cur+1)%S.players.length;
   const p=S.players[sg.cur];
