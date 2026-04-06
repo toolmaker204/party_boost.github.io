@@ -694,6 +694,25 @@ select option{background:var(--bg2)}
       <span id="sg-rv" style="font-size:.82rem;font-weight:700">30%</span>
     </div>
   </div>
+  <div class="card" style="margin-bottom:12px">
+    <div style="font-weight:700;margin-bottom:8px;color:var(--white)">すごろくカテゴリ編集</div>
+    <div id="sg-cat-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;padding:6px 8px;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.15);border-radius:10px;flex-wrap:wrap">
+      <span style="font-size:.72rem;color:var(--text2)">出現重み</span>
+      <button onclick="chgSGCatW(-1)" style="width:24px;height:24px;border:0;border-radius:6px;background:rgba(255,255,255,.08);color:var(--white);font-weight:900;cursor:pointer">−</button>
+      <span id="sg-cat-w-txt" style="min-width:70px;text-align:center;font-size:.72rem;font-weight:800;color:var(--cyan)"></span>
+      <button onclick="chgSGCatW(1)" style="width:24px;height:24px;border:0;border-radius:6px;background:rgba(255,255,255,.08);color:var(--white);font-weight:900;cursor:pointer">＋</button>
+      <span style="flex:1"></span>
+      <label style="display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text2);cursor:pointer">
+        <input type="checkbox" id="sg-cat-on" onchange="tglSGCat()" style="width:auto;margin:0">有効
+      </label>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input type="text" id="sg-cat-ei" placeholder="マス内容を追加…" style="flex:1">
+      <button class="btn bc bsm" onclick="addSGCatEv()" style="width:auto;padding:10px 14px">追加</button>
+    </div>
+    <div id="sg-cat-list" style="max-height:200px;overflow-y:auto"></div>
+  </div>
   <div class="card">
     <div style="font-weight:700;margin-bottom:8px;color:var(--white)">データ</div>
     <div class="sr"><span>バージョン</span><span style="color:var(--text2)">1.0.0</span></div>
@@ -1063,9 +1082,19 @@ function load(){
     S.gamePuns[g.k]=S.gamePuns[g.k].map(e=>typeof e==='string'?{t:e,w:1}:{t:e.t,w:Math.max(PUN_W_MIN,Math.min(PUN_W_MAX,e.w|0||1))});
   });
   delete S.punishments;
+  if(!S.sg)S.sg={cc:[],sz:30,cr:30};
+  if(!Array.isArray(S.sg.cats))S.sg.cats=SG_DEFAULT_CATS.map(c=>({...c,ev:c.ev.map(e=>({...e}))}));
+  else S.sg.cats=S.sg.cats.map(c=>{
+    const def=SG_DEFAULT_CATS.find(d=>d.t===c.t)||{};
+    return {
+      t:c.t,ic:c.ic||def.ic,lb:c.lb||def.lb,cls:c.cls||def.cls,cat:c.cat||def.cat,
+      w:Math.max(SG_CAT_W_MIN,Math.min(SG_CAT_W_MAX,c.w|0||1)),
+      on:c.on!==false,
+      ev:Array.isArray(c.ev)?c.ev.map(e=>typeof e==='string'?{t:e,w:1}:{t:e.t,w:Math.max(SG_EV_W_MIN,Math.min(SG_EV_W_MAX,e.w|0||1))}):[]
+    };
+  });
 }
 function save(){localStorage.setItem('ng',JSON.stringify(S))}
-load();
 
 /* ═══════ NAV ═══════ */
 function go(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0)}
@@ -1382,22 +1411,24 @@ function tdNext(){if(!S.players.length){document.getElementById('td-who').textCo
 function tdPick(t){const l=t==='truth'?TR:DA;document.getElementById('td-text').textContent=l[~~(Math.random()*l.length)];const c=document.getElementById('td-card');c.style.display='flex';c.style.animation='bounceIn .4s ease';se()}
 
 /* ═══════ SUGOROKU ═══════ */
-const CT=[
-  {t:'drink',ic:'i-drink',lb:'飲酒系',cls:'cd',cat:'rgba(245,158,11,.85)',
-   ev:['1杯飲む！','隣の人と乾杯して飲む','全員で乾杯！','2杯飲む！','右隣の人と一気飲み対決','指名した人に注いで一緒に飲む','3口で飲み干せ！']},
-  {t:'love',ic:'i-kiss',lb:'エロ系',cls:'cl',cat:'rgba(255,45,123,.85)',
-   ev:['好きな人にキス！','右隣の人と指切り10秒','好きな人の手を15秒握る','隣の人の肩に頭を乗せる30秒','向かいの人と見つめ合い15秒','好きな人に耳打ちで秘密を伝える','隣の人にハグ10秒','指名した人の太ももに手を置いて10秒','好きな人の唇に指でタッチ','隣の人とほっぺをくっつけて10秒','好きな人を後ろからハグ15秒','指名した人に壁ドン！セリフ付き','右隣の人にほっぺにキス','好きな人をお姫様抱っこ(できる範囲で)','隣の人の耳元で「好き」と囁く','指名した人と手を繋いでゲーム終了まで離さない']},
-  {t:'challenge',ic:'i-target',lb:'チャレンジ',cls:'cc',cat:'rgba(0,232,255,.85)',
-   ev:['早口言葉に挑戦！失敗したら2杯','モノマネ披露！ウケなかったら飲む','30秒間ダンス','変顔キープ10秒','利き手じゃない方でお酒を注いで飲む','セクシーポーズ3連続']},
-  {t:'move',ic:'i-shuffle',lb:'移動系',cls:'cm',cat:'rgba(168,85,247,.85)',
-   ev:['3マス戻る😭','1番後ろの人と位置交換！','2マス進む！','サイコロもう1回！','スタートに戻る😱','1位の人と位置交換']},
-  {t:'question',ic:'i-help',lb:'質問系',cls:'cq',cat:'rgba(52,211,153,.85)',
-   ev:['全員に秘密を1つ話す','好きなタイプを正直に言え','最近の恋愛事情を暴露','初恋のエピソードを語れ','好きな人のどこが好きか言え','最近一番恥ずかしかったことは？']},
-  {t:'random',ic:'i-zap',lb:'ランダム',cls:'cr',cat:'rgba(255,200,55,.85)',
-   ev:['サイコロ振って偶数なら飲む！','全員じゃんけん！負けた人飲む','王様ゲーム！次の人に命令できる','ロシアンルーレット！全員の中からランダムで1人飲む']},
-  {t:'lucky',ic:'i-star',lb:'ラッキー',cls:'ck',cat:'rgba(255,255,255,.5)',
-   ev:['何もしなくてOK！','1マス余分に進む！','好きな人を1人指名して罰ゲーム免除','誰か1人を指名して代わりに飲ませる']},
+const SG_DEFAULT_CATS=[
+  {t:'drink',ic:'i-drink',lb:'飲酒系',cls:'cd',cat:'rgba(245,158,11,.85)',w:3,on:true,
+   ev:[{t:'1杯飲む！',w:5},{t:'隣の人と乾杯して飲む',w:3},{t:'全員で乾杯！',w:2},{t:'2杯飲む！',w:2},{t:'右隣の人と一気飲み対決',w:1},{t:'指名した人に注いで一緒に飲む',w:2},{t:'3口で飲み干せ！',w:2}]},
+  {t:'love',ic:'i-kiss',lb:'エロ系',cls:'cl',cat:'rgba(255,45,123,.85)',w:3,on:true,
+   ev:[{t:'好きな人にキス！',w:1},{t:'右隣の人と指切り10秒',w:3},{t:'好きな人の手を15秒握る',w:3},{t:'隣の人の肩に頭を乗せる30秒',w:3},{t:'向かいの人と見つめ合い15秒',w:3},{t:'好きな人に耳打ちで秘密を伝える',w:2},{t:'隣の人にハグ10秒',w:3},{t:'指名した人の太ももに手を置いて10秒',w:1},{t:'好きな人の唇に指でタッチ',w:1},{t:'隣の人とほっぺをくっつけて10秒',w:2},{t:'好きな人を後ろからハグ15秒',w:2},{t:'指名した人に壁ドン！セリフ付き',w:2},{t:'右隣の人にほっぺにキス',w:2},{t:'好きな人をお姫様抱っこ(できる範囲で)',w:1},{t:'隣の人の耳元で「好き」と囁く',w:2},{t:'指名した人と手を繋いでゲーム終了まで離さない',w:1}]},
+  {t:'challenge',ic:'i-target',lb:'チャレンジ',cls:'cc',cat:'rgba(0,232,255,.85)',w:3,on:true,
+   ev:[{t:'早口言葉に挑戦！失敗したら2杯',w:3},{t:'モノマネ披露！ウケなかったら飲む',w:2},{t:'30秒間ダンス',w:2},{t:'変顔キープ10秒',w:3},{t:'利き手じゃない方でお酒を注いで飲む',w:3},{t:'セクシーポーズ3連続',w:1}]},
+  {t:'move',ic:'i-shuffle',lb:'移動系',cls:'cm',cat:'rgba(168,85,247,.85)',w:2,on:true,
+   ev:[{t:'3マス戻る😭',w:3},{t:'1番後ろの人と位置交換！',w:1},{t:'2マス進む！',w:3},{t:'サイコロもう1回！',w:3},{t:'スタートに戻る😱',w:1},{t:'1位の人と位置交換',w:1}]},
+  {t:'question',ic:'i-help',lb:'質問系',cls:'cq',cat:'rgba(52,211,153,.85)',w:3,on:true,
+   ev:[{t:'全員に秘密を1つ話す',w:2},{t:'好きなタイプを正直に言え',w:3},{t:'最近の恋愛事情を暴露',w:2},{t:'初恋のエピソードを語れ',w:3},{t:'好きな人のどこが好きか言え',w:2},{t:'最近一番恥ずかしかったことは？',w:3}]},
+  {t:'random',ic:'i-zap',lb:'ランダム',cls:'cr',cat:'rgba(255,200,55,.85)',w:2,on:true,
+   ev:[{t:'サイコロ振って偶数なら飲む！',w:3},{t:'全員じゃんけん！負けた人飲む',w:3},{t:'王様ゲーム！次の人に命令できる',w:2},{t:'ロシアンルーレット！全員の中からランダムで1人飲む',w:2}]},
+  {t:'lucky',ic:'i-star',lb:'ラッキー',cls:'ck',cat:'rgba(255,255,255,.5)',w:2,on:true,
+   ev:[{t:'何もしなくてOK！',w:3},{t:'1マス余分に進む！',w:3},{t:'好きな人を1人指名して罰ゲーム免除',w:2},{t:'誰か1人を指名して代わりに飲ませる',w:2}]},
 ];
+const SG_CAT_W_MIN=1,SG_CAT_W_MAX=10;
+const SG_EV_W_MIN=1,SG_EV_W_MAX=10;
 
 let sg={board:[],pos:[],cur:0,fin:[],on:false};
 
@@ -1405,12 +1436,60 @@ function addCC(){const inp=document.getElementById('sg-ci'),t=inp.value.trim();i
 function rmCC(i){S.sg.cc.splice(i,1);save();renderCC()}
 function renderCC(){document.getElementById('sg-cl').innerHTML=S.sg.cc.map((c,i)=>`<div class="pi"><span class="t">${c}</span><span class="dl" onclick="rmCC(${i})">✕</span></div>`).join('')}
 
+let curSGCat=0;
+function setSGCat(i){curSGCat=i;renderSGCat()}
+function chgSGCatW(d){const c=S.sg.cats[curSGCat];if(!c)return;c.w=Math.max(SG_CAT_W_MIN,Math.min(SG_CAT_W_MAX,(c.w||1)+d));save();renderSGCat()}
+function tglSGCat(){const c=S.sg.cats[curSGCat];if(!c)return;c.on=document.getElementById('sg-cat-on').checked;save();renderSGCat()}
+function addSGCatEv(){const inp=document.getElementById('sg-cat-ei'),t=inp.value.trim();if(!t)return;const c=S.sg.cats[curSGCat];if(!c)return;c.ev.push({t,w:1});inp.value='';save();renderSGCat()}
+function rmSGCatEv(i){const c=S.sg.cats[curSGCat];if(!c)return;c.ev.splice(i,1);save();renderSGCat()}
+function chgSGEvW(i,d){const c=S.sg.cats[curSGCat];if(!c||!c.ev[i])return;c.ev[i].w=Math.max(SG_EV_W_MIN,Math.min(SG_EV_W_MAX,(c.ev[i].w||1)+d));save();renderSGCat()}
+function renderSGCat(){
+  const tabs=document.getElementById('sg-cat-tabs');if(!tabs)return;
+  const cats=S.sg.cats||[];
+  const totalW=cats.filter(c=>c.on!==false).reduce((s,c)=>s+(c.w||1),0)||1;
+  tabs.innerHTML=cats.map((c,i)=>`<div class="tab ${i===curSGCat?'on':''}" style="flex:0 0 auto;padding:6px 10px;font-size:.72rem;${c.on===false?'opacity:.35':''}" onclick="setSGCat(${i})">${c.lb}</div>`).join('');
+  const cur=cats[curSGCat];if(!cur)return;
+  const pct=cur.on===false?0:Math.round((cur.w||1)/totalW*100);
+  document.getElementById('sg-cat-w-txt').innerHTML=`×${cur.w||1} <span style="color:var(--text2);font-weight:600">(${pct}%)</span>`;
+  document.getElementById('sg-cat-on').checked=cur.on!==false;
+  const evTot=cur.ev.reduce((s,e)=>s+(e.w||1),0)||1;
+  document.getElementById('sg-cat-list').innerHTML=cur.ev.map((e,i)=>{
+    const epct=Math.round((e.w||1)/evTot*100);
+    return `<div class="pi" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span class="t" style="flex:1;min-width:0">${e.t}</span>
+      <div style="display:flex;align-items:center;gap:4px;background:rgba(0,232,255,.08);border:1px solid rgba(0,232,255,.15);border-radius:8px;padding:2px 4px">
+        <button onclick="chgSGEvW(${i},-1)" style="width:22px;height:22px;border:0;border-radius:6px;background:rgba(255,255,255,.08);color:var(--white);font-weight:900;cursor:pointer">−</button>
+        <span style="min-width:52px;text-align:center;font-size:.72rem;font-weight:800;color:var(--cyan)">×${e.w}<span style="color:var(--text2);font-weight:600">(${epct}%)</span></span>
+        <button onclick="chgSGEvW(${i},1)" style="width:22px;height:22px;border:0;border-radius:6px;background:rgba(255,255,255,.08);color:var(--white);font-weight:900;cursor:pointer">＋</button>
+      </div>
+      <span class="dl" onclick="rmSGCatEv(${i})">✕</span>
+    </div>`;
+  }).join('')||'<div style="color:var(--text2);font-size:.75rem;text-align:center;padding:8px">まだありません</div>';
+}
+
 function genBoard(){
   const n=30,b=[{t:'start',ic:'i-crown',ev:'スタート！',cls:'cs',lb:'スタート',cat:'rgba(0,232,255,.7)'}];
   const cr=S.sg.cr/100,cc=S.sg.cc;
+  const active=(S.sg.cats||[]).filter(c=>c.on!==false&&Array.isArray(c.ev)&&c.ev.length);
+  const totalW=active.reduce((s,c)=>s+(c.w||1),0);
+  function pickCat(){
+    if(!totalW)return null;
+    let r=Math.random()*totalW;
+    for(const c of active){r-=(c.w||1);if(r<=0)return c}
+    return active[active.length-1];
+  }
   for(let i=1;i<n-1;i++){
     if(cc.length&&Math.random()<cr){b.push({t:'custom',ic:'i-zap',ev:cc[~~(Math.random()*cc.length)],cls:'cr',lb:'カスタム',cat:'rgba(255,200,55,.7)'})}
-    else{const c=CT[~~(Math.random()*CT.length)];b.push({...c,ev:c.ev[~~(Math.random()*c.ev.length)]})}
+    else{
+      const c=pickCat();
+      if(c){
+        const evTot=c.ev.reduce((s,e)=>s+(e.w||1),0)||1;
+        let r2=Math.random()*evTot,chosen=c.ev[0];
+        for(const e of c.ev){r2-=(e.w||1);if(r2<=0){chosen=e;break}}
+        b.push({t:c.t,ic:c.ic,lb:c.lb,cls:c.cls,cat:c.cat,ev:chosen.t});
+      }
+      else b.push({t:'lucky',ic:'i-star',ev:'何もしなくてOK！',cls:'ck',lb:'ラッキー',cat:'rgba(255,255,255,.5)'});
+    }
   }
   b.push({t:'goal',ic:'i-crown',ev:'ゴール！',cls:'cg',lb:'ゴール',cat:'rgba(255,200,55,.9)'});
   return b;
@@ -1503,7 +1582,7 @@ function animateHop(pi,fromPos,steps){
     const cel=document.getElementById('cel-'+nextPos);
     if(cel)cel.classList.add('hop');
     se();
-    setTimeout(hop,880);
+    setTimeout(hop,560);
   }
   hop();
 }
@@ -1563,9 +1642,11 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const a=docume
   if(a&&a.id==='inp-name')addP();
   if(a&&a.id==='inp-pun')addPun();
   if(a&&a.id==='sg-ci')addCC();
+  if(a&&a.id==='sg-cat-ei')addSGCatEv();
 });
 
 /* ═══════ INIT ═══════ */
+load();
 (function init(){
   initCP();renderP();renderPun();
   document.getElementById('tgl-bgm').classList.toggle('on',S.set.bgm);
@@ -1576,6 +1657,7 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const a=docume
   if(crEl){crEl.value=S.sg.cr;crEl.addEventListener('input',e=>{S.sg.cr=+e.target.value;rvEl.textContent=e.target.value+'%';save()})}
   if(rvEl)rvEl.textContent=S.sg.cr+'%';
   if(clEl)renderCC();
+  if(document.getElementById('sg-cat-tabs'))renderSGCat();
 })();
 
 /* ═══════ SERVICE WORKER ═══════ */
