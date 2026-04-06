@@ -673,7 +673,8 @@ select option{background:var(--bg2)}
     <div class="sr"><span>効果音</span><button class="tgl on" id="tgl-se" onclick="tglSet('se')"></button></div>
   </div>
   <div class="card" style="margin-bottom:12px">
-    <div style="font-weight:700;margin-bottom:8px;color:var(--white)">罰ゲーム設定</div>
+    <div style="font-weight:700;margin-bottom:8px;color:var(--white)">罰ゲーム設定（ゲーム別）</div>
+    <div id="pun-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
     <div style="display:flex;gap:8px;margin-bottom:10px">
       <input type="text" id="inp-pun" placeholder="罰ゲームを追加…" style="flex:1">
       <button class="btn bp bsm" onclick="addPun()" style="width:auto;padding:10px 14px">追加</button>
@@ -997,7 +998,10 @@ select option{background:var(--bg2)}
       <div class="gi-rule-head">遊び方</div>
       <p id="gi-desc"></p>
     </div>
-    <button class="btn bp" id="gi-start" style="font-size:1.1rem">ゲームスタート！</button>
+    <div class="g2">
+      <button class="btn bo" onclick="document.getElementById('game-intro').classList.remove('on')">戻る</button>
+      <button class="btn bp" id="gi-start" style="font-size:1.1rem">ゲームスタート！</button>
+    </div>
   </div>
 </div>
 
@@ -1018,15 +1022,48 @@ select option{background:var(--bg2)}
      ============================================================ -->
 <script>
 /* ═══════ STATE ═══════ */
+const DEFAULT_PUNS={
+  roulette:[{t:'1杯飲む！',w:5},{t:'一気飲み！',w:1},{t:'2杯飲む！',w:2},{t:'全員で乾杯して飲む',w:3},{t:'好きな人を指名して2人で飲む',w:3}],
+  tongue:[{t:'1杯飲む！',w:5},{t:'利き手じゃない方で飲む',w:3},{t:'もう一度チャレンジ！失敗したらもう1杯',w:2},{t:'隣の人と一緒に飲む',w:3}],
+  memory:[{t:'1杯飲む！',w:5},{t:'めくったカードの枚数だけ口飲み',w:2},{t:'隣の人に注いでもらって飲む',w:3}],
+  minority:[{t:'1杯飲む！',w:5},{t:'少数派全員で乾杯',w:3},{t:'多数派に1人指名されて飲む',w:3},{t:'一気飲み！',w:1}],
+  ogiri:[{t:'1杯飲む！',w:5},{t:'もう1つお題に答える',w:2},{t:'全員に向かってモノマネ',w:2},{t:'変顔10秒キープ',w:2}],
+  stop5:[{t:'1杯飲む！',w:5},{t:'ズレた秒数だけ口飲み',w:3},{t:'もう一度チャレンジ！',w:2},{t:'隣の人と乾杯',w:3}],
+  sugoroku:[{t:'1杯飲む！',w:5},{t:'一気飲み！',w:1},{t:'2杯飲む！',w:2},{t:'全員に1杯ずつ注ぐ',w:2},{t:'好きな人を指名して2人で飲む',w:3}]
+};
+const PUN_W_MIN=1,PUN_W_MAX=10;
+const PUN_GAMES=[
+  {k:'roulette',n:'ルーレット'},
+  {k:'tongue',n:'早口言葉'},
+  {k:'memory',n:'神経衰弱'},
+  {k:'minority',n:'マイノリティ'},
+  {k:'ogiri',n:'大喜利'},
+  {k:'stop5',n:'5秒STOP'},
+  {k:'sugoroku',n:'すごろく'}
+];
 let S={
   players:[],
-  punishments:['1杯飲む！','一気飲み！','隣の人と乾杯して飲む','好きな人を指名して2人で飲む','全員で乾杯！','2杯飲む！','利き手じゃない方で飲む'],
+  gamePuns:JSON.parse(JSON.stringify(DEFAULT_PUNS)),
   set:{bgm:false,se:true},
   sg:{cc:[],sz:30,cr:30}
 };
 const COLORS=['#ff2d7b','#00c2d4','#a855f7','#f59e0b','#34d399','#ef4444','#6366f1','#ec4899','#14b8a6','#f97316'];
 
-function load(){const s=localStorage.getItem('ng');if(s)try{S=JSON.parse(s)}catch(e){}}
+function load(){
+  const s=localStorage.getItem('ng');if(s)try{S=JSON.parse(s)}catch(e){}
+  if(!S.gamePuns){
+    S.gamePuns=JSON.parse(JSON.stringify(DEFAULT_PUNS));
+    if(Array.isArray(S.punishments)&&S.punishments.length){
+      PUN_GAMES.forEach(g=>{S.gamePuns[g.k]=S.punishments.map(t=>({t,w:1}))});
+    }
+  }
+  PUN_GAMES.forEach(g=>{
+    if(!Array.isArray(S.gamePuns[g.k]))S.gamePuns[g.k]=DEFAULT_PUNS[g.k].map(o=>({...o}));
+    // normalize legacy string entries to {t,w}
+    S.gamePuns[g.k]=S.gamePuns[g.k].map(e=>typeof e==='string'?{t:e,w:1}:{t:e.t,w:Math.max(PUN_W_MIN,Math.min(PUN_W_MAX,e.w|0||1))});
+  });
+  delete S.punishments;
+}
 function save(){localStorage.setItem('ng',JSON.stringify(S))}
 load();
 
@@ -1090,10 +1127,37 @@ function renderP(){
 }
 
 /* ═══════ PUNISHMENTS ═══════ */
-function addPun(){const inp=document.getElementById('inp-pun'),t=inp.value.trim();if(!t)return;S.punishments.push(t);inp.value='';save();renderPun()}
-function rmPun(i){S.punishments.splice(i,1);save();renderPun()}
-function renderPun(){document.getElementById('pun-list').innerHTML=S.punishments.map((p,i)=>`<div class="pi"><span class="t">${p}</span><span class="dl" onclick="rmPun(${i})">✕</span></div>`).join('')}
-function rndPun(){return S.punishments[Math.floor(Math.random()*S.punishments.length)]||'1杯飲む！'}
+let curPunGame='roulette';
+function setPunGame(k){curPunGame=k;renderPun()}
+function addPun(){const inp=document.getElementById('inp-pun'),t=inp.value.trim();if(!t)return;S.gamePuns[curPunGame].push({t,w:1});inp.value='';save();renderPun()}
+function rmPun(i){S.gamePuns[curPunGame].splice(i,1);save();renderPun()}
+function chgPunW(i,d){const e=S.gamePuns[curPunGame][i];if(!e)return;e.w=Math.max(PUN_W_MIN,Math.min(PUN_W_MAX,(e.w||1)+d));save();renderPun()}
+function renderPun(){
+  const tabs=document.getElementById('pun-tabs');
+  if(tabs)tabs.innerHTML=PUN_GAMES.map(g=>`<div class="tab ${g.k===curPunGame?'on':''}" style="flex:0 0 auto;padding:6px 12px;font-size:.72rem" onclick="setPunGame('${g.k}')">${g.n}</div>`).join('');
+  const list=S.gamePuns[curPunGame]||[];
+  const total=list.reduce((s,e)=>s+(e.w||1),0)||1;
+  document.getElementById('pun-list').innerHTML=list.map((e,i)=>{
+    const pct=Math.round((e.w||1)/total*100);
+    return `<div class="pi" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span class="t" style="flex:1;min-width:0">${e.t}</span>
+      <div style="display:flex;align-items:center;gap:4px;background:rgba(0,232,255,.08);border:1px solid rgba(0,232,255,.15);border-radius:8px;padding:2px 4px">
+        <button onclick="chgPunW(${i},-1)" style="width:22px;height:22px;border:0;border-radius:6px;background:rgba(255,255,255,.08);color:var(--white);font-weight:900;cursor:pointer">−</button>
+        <span style="min-width:44px;text-align:center;font-size:.72rem;font-weight:800;color:var(--cyan)">×${e.w}<span style="color:var(--text2);font-weight:600">(${pct}%)</span></span>
+        <button onclick="chgPunW(${i},1)" style="width:22px;height:22px;border:0;border-radius:6px;background:rgba(255,255,255,.08);color:var(--white);font-weight:900;cursor:pointer">＋</button>
+      </div>
+      <span class="dl" onclick="rmPun(${i})">✕</span>
+    </div>`;
+  }).join('')||'<div style="color:var(--text2);font-size:.75rem;text-align:center;padding:8px">まだ登録がありません</div>';
+}
+function rndPun(g){
+  const list=(g&&S.gamePuns[g])||[];
+  if(!list.length)return '1杯飲む！';
+  const total=list.reduce((s,e)=>s+(e.w||1),0);
+  let r=Math.random()*total;
+  for(const e of list){r-=(e.w||1);if(r<=0)return e.t}
+  return list[list.length-1].t;
+}
 
 /* ═══════ SETTINGS ═══════ */
 function tglSet(k){S.set[k]=!S.set[k];document.getElementById('tgl-'+k).classList.toggle('on',S.set[k]);save()}
@@ -1135,7 +1199,7 @@ function spinRL(){
   rlAng+=extra;cv.style.transition='transform 4s cubic-bezier(.17,.67,.12,.99)';cv.style.transform=`rotate(${rlAng}deg)`;se();
   setTimeout(()=>{
     const na=rlAng%360,sa=360/n,wi=Math.floor(((360-na%360)%360)/sa)%n,w=S.players[wi];
-    showRes(pIcon('i-skull','var(--pink)'),w.name+' が負け！','罰ゲーム決定！',rndPun());btn.disabled=false;
+    showRes(pIcon('i-skull','var(--pink)'),w.name+' が負け！','罰ゲーム決定！',rndPun('roulette'));btn.disabled=false;
   },4200);
 }
 
@@ -1167,7 +1231,7 @@ function startTT(){
   ttPi=ttPi%S.players.length;document.getElementById('tt-who').textContent=S.players[ttPi].name+' の番！';se();
   ttTmr=setInterval(()=>{t--;te.textContent=t;if(t<=3)te.classList.add('dng');if(t<=0){clearInterval(ttTmr);ttTmr=null;failTT()}},1e3);
 }
-function failTT(){if(ttTmr){clearInterval(ttTmr);ttTmr=null}const p=S.players[ttPi];showRes(pIcon('i-mouth','var(--cyan)'),p.name+' 失敗！','噛んじゃった！飲め！',rndPun());ttPi=(ttPi+1)%S.players.length}
+function failTT(){if(ttTmr){clearInterval(ttTmr);ttTmr=null}const p=S.players[ttPi];showRes(pIcon('i-mouth','var(--cyan)'),p.name+' 失敗！','噛んじゃった！飲め！',rndPun('tongue'));ttPi=(ttPi+1)%S.players.length}
 
 /* ═══════ MEMORY GAME ═══════ */
 const MEM_ICONS=['🍺','🍷','🍸','🎲','🎯','💀','👑','🔥'];
@@ -1209,7 +1273,7 @@ function memTap(i){
         memFlipped=[];memLock=false;
         memPi=(memPi+1)%S.players.length;
         renderMemBoard();renderMemScore();updMemWho();
-        showRes(pIcon('i-skull','var(--pink)'),S.players[(memPi-1+S.players.length)%S.players.length].name,'',rndPun());
+        showRes(pIcon('i-skull','var(--pink)'),S.players[(memPi-1+S.players.length)%S.players.length].name,'',rndPun('memory'));
       },1000);
     }
   }
@@ -1218,7 +1282,7 @@ function memEnd(){
   const mx=Math.max(...memScores);const winners=S.players.filter((_,i)=>memScores[i]===mx);
   const mn=Math.min(...memScores);const losers=S.players.filter((_,i)=>memScores[i]===mn);
   showRes(pIcon('i-crown','var(--gold)'),winners.map(w=>w.name).join(', ')+' 優勝！',
-    '最多ペア！',losers.length&&losers[0]!==winners[0]?'最下位: '+losers.map(l=>l.name).join(', ')+' → '+rndPun():'');
+    '最多ペア！',losers.length&&losers[0]!==winners[0]?'最下位: '+losers.map(l=>l.name).join(', ')+' → '+rndPun('memory'):'');
   document.getElementById('mem-btn').style.display='';document.getElementById('mem-btn').textContent='もう一回';
 }
 
@@ -1259,7 +1323,7 @@ function mnVote(c){mnV[mnVi]=c;mnVi++;if(mnVi<S.players.length){showMnTurn();se(
   else{const ms=cA<cB?'A':'B';losers=S.players.filter((_,i)=>mnV[i]===ms);resLabel='少数派: '+losers.map(l=>l.name).join(', ')}
   document.getElementById('mn-res').innerHTML=`<div style="margin-bottom:8px">${mnQ.a}: ${cA}票 / ${mnQ.b}: ${cB}票</div><div style="color:var(--pink);font-weight:800">${resLabel}</div>`;
   document.getElementById('mn-btn').style.display='';document.getElementById('mn-btn').textContent='次の質問';
-  if(losers.length)showRes(pIcon('i-people','var(--green)'),losers.map(l=>l.name).join(', '),cA===cB?'同数！全員飲め！':'少数派！飲め！',rndPun());
+  if(losers.length)showRes(pIcon('i-people','var(--green)'),losers.map(l=>l.name).join(', '),cA===cB?'同数！全員飲め！':'少数派！飲め！',rndPun('minority'));
 }}
 
 /* ═══════ OGIRI ═══════ */
@@ -1296,7 +1360,7 @@ function ogShowAns(){
 function ogNext(){ogRevIdx++;se();ogReveal()}
 function ogVote(wi){
   const loser=ogAns.filter((_,i)=>i!==wi).pop();
-  showRes(pIcon('i-laugh','var(--gold)'),ogAns[wi].p.name+' 優勝！','面白い！',loser?'最下位: '+loser.p.name+' → '+rndPun():'');
+  showRes(pIcon('i-laugh','var(--gold)'),ogAns[wi].p.name+' 優勝！','面白い！',loser?'最下位: '+loser.p.name+' → '+rndPun('ogiri'):'');
   document.getElementById('og-btn').style.display='';document.getElementById('og-btn').textContent='次のお題';document.getElementById('og-list').innerHTML='';
 }
 
@@ -1374,7 +1438,7 @@ function renderBrd(){
     // front (face-down)
     h+=`<div class="cel-front"><div class="card-pattern"></div><span class="cn">${i}</span><span class="card-q">?</span>${ph.length&&!isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
     // back (revealed)
-    h+=`<div class="cel-back ${c.cls}"><span class="cn">${i}</span><svg viewBox="0 0 24 24" class="ci" style="width:16px;height:16px"><use href="#${c.ic}"/></svg><span class="lb">${c.lb||''}</span><span class="ev-text">${c.ev||''}</span>${ph.length&&isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
+    h+=`<div class="cel-back ${c.cls}"><span class="cn">${i}</span><svg viewBox="0 0 24 24" class="ci" style="width:16px;height:16px"><use href="#${c.ic}"/></svg><span class="ev-text">${c.ev||''}</span>${ph.length&&isFlipped?`<span class="po">${ph.join('')}</span>`:''}</div>`;
     h+=`</div></div>`;
   });
   h+='</div>';document.getElementById('sg-brd').innerHTML=h;
@@ -1400,7 +1464,7 @@ function rollD(){
   if(dRoll||!sg.on)return;
   if(sg.fin.length>=S.players.length-1){
     const loser=S.players.find((_,i)=>!sg.fin.includes(i));
-    showRes(pIcon('i-skull','var(--pink)'),loser?loser.name+' 最下位！':'ゲーム終了','罰ゲーム確定！飲め！',loser?rndPun():'');
+    showRes(pIcon('i-skull','var(--pink)'),loser?loser.name+' 最下位！':'ゲーム終了','罰ゲーム確定！飲め！',loser?rndPun('sugoroku'):'');
     sg.on=false;setTimeout(()=>go('s-home'),400);return;
   }
   dRoll=true;se();
@@ -1425,7 +1489,7 @@ function animateHop(pi,fromPos,steps){
       if(np>=mx){
         np=mx;sg.pos[pi]=np;sg.revealed.add(np);sg.fin.push(pi);renderBrd();renderStat();
         if(sg.fin.length===1)showRes(pIcon('i-crown','var(--gold)'),S.players[pi].name+' 優勝！','ゴール一番乗り！','');
-        else if(sg.fin.length>=S.players.length-1){const loser=S.players.find((_,i)=>!sg.fin.includes(i));showRes(pIcon('i-skull','var(--pink)'),loser.name+' 最下位！','罰ゲーム確定！飲め！',rndPun());sg.on=false;setTimeout(()=>go('s-home'),400)}
+        else if(sg.fin.length>=S.players.length-1){const loser=S.players.find((_,i)=>!sg.fin.includes(i));showRes(pIcon('i-skull','var(--pink)'),loser.name+' 最下位！','罰ゲーム確定！飲め！',rndPun('sugoroku'));sg.on=false;setTimeout(()=>go('s-home'),400)}
         document.getElementById('sg-dres').textContent='';sg.cur=(sg.cur+1)%S.players.length;updTurn();dRoll=false;return;
       }
       sg.pos[pi]=np;sg.revealed.add(np);renderBrd();renderStat();
@@ -1486,7 +1550,7 @@ function s5Action(){
       resEl.textContent='アウト！飲め！ ('+elapsed.toFixed(3)+'秒)';resEl.style.color='var(--pink)';
       document.getElementById('s5-ring').className='stop-ring fail';failSE();
       const p=S.players.length?S.players[s5Pi%S.players.length]:null;
-      if(p)setTimeout(()=>showRes(pIcon('i-timer','var(--pink)'),p.name+' アウト！',elapsed.toFixed(3)+'秒（±0.10秒以内でセーフ）',rndPun()),400);
+      if(p)setTimeout(()=>showRes(pIcon('i-timer','var(--pink)'),p.name+' アウト！',elapsed.toFixed(3)+'秒（±0.10秒以内でセーフ）',rndPun('stop5')),400);
     }
     document.getElementById('s5-btn').textContent='もう一度';
     s5Pi=(s5Pi+1)%Math.max(1,S.players.length);
