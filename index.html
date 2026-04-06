@@ -207,11 +207,11 @@ select option{background:var(--bg2)}
 /*───────────────────────────────────────────
   SUGOROKU BOARD
 ───────────────────────────────────────────*/
-.brd-wrap{overflow:auto;padding:6px 2px;-webkit-overflow-scrolling:touch;border-radius:var(--r);max-height:calc(100vh - 280px)}
-.brd{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.brd-wrap{overflow:auto;padding:6px 2px;-webkit-overflow-scrolling:touch;border-radius:var(--r);max-height:calc(100vh - 260px)}
+.brd{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 
 /* card flip container */
-.cel-wrap{width:100%;aspect-ratio:3/4;perspective:400px;position:relative}
+.cel-wrap{width:100%;aspect-ratio:3/4;perspective:500px;position:relative}
 .cel{
   width:100%;height:100%;position:relative;
   transform-style:preserve-3d;transition:transform .5s ease;
@@ -228,30 +228,43 @@ select option{background:var(--bg2)}
   overflow:hidden;
 }
 
-/* front = card back (face-down, what you see initially) */
+/* front = card back (face-down, what you see initially) — WHITE */
 .cel-front{
-  background:linear-gradient(145deg,var(--bg3),var(--bg4));
-  border:1.5px solid rgba(255,255,255,.08);
+  background:linear-gradient(145deg,#ffffff,#e9ecf5);
+  border:1.5px solid rgba(0,0,0,.1);
 }
 .cel-front .card-pattern{
-  position:absolute;inset:0;opacity:.08;
-  background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(255,255,255,.3) 4px,rgba(255,255,255,.3) 5px);
+  position:absolute;inset:0;opacity:.12;
+  background:repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(0,0,0,.35) 5px,rgba(0,0,0,.35) 6px);
 }
-.cel-front .cn{font-size:.4rem;opacity:.4;font-weight:700;position:absolute;top:2px;left:4px}
-.cel-front .card-q{font-size:1rem;opacity:.3;font-weight:900;color:var(--white)}
-.cel-front .po{position:absolute;bottom:2px;display:flex;gap:1px}
+.cel-front .cn{font-size:.62rem;opacity:.5;font-weight:800;position:absolute;top:3px;left:5px;color:#333}
+.cel-front .card-q{font-size:1.6rem;opacity:.35;font-weight:900;color:#1a1a2e}
+.cel-front .po{position:absolute;bottom:3px;display:flex;gap:1px}
 
 /* back = card face (revealed content) */
 .cel-back{
   transform:rotateY(180deg);
   background:var(--bg2);border:1.5px solid rgba(255,255,255,.1);
-  padding:4px 3px;gap:1px;
+  padding:5px 4px;gap:2px;
 }
-.cel-back .cn{font-size:.35rem;opacity:.35;font-weight:700;position:absolute;top:1px;left:3px}
-.cel-back .ci{margin-top:2px}
-.cel-back .ci svg{width:14px!important;height:14px!important}
-.cel-back .lb{font-size:.32rem;color:var(--text2);font-weight:700;line-height:1;letter-spacing:.02em;opacity:.7}
-.cel-back .ev-text{font-size:.33rem;color:var(--white);line-height:1.2;text-align:center;padding:1px 2px;word-break:break-all;font-weight:600;flex:1;display:flex;align-items:center}
+.cel-back .cn{font-size:.55rem;opacity:.4;font-weight:700;position:absolute;top:2px;left:4px}
+.cel-back .ci{margin-top:3px}
+.cel-back .ci svg{width:22px!important;height:22px!important}
+.cel-back .lb{font-size:.5rem;color:var(--text2);font-weight:700;line-height:1;letter-spacing:.02em;opacity:.7}
+.cel-back .ev-text{font-size:.56rem;color:var(--white);line-height:1.25;text-align:center;padding:1px 2px;word-break:break-word;font-weight:600;flex:1;display:flex;align-items:center}
+
+/* Landscape: wider cards across more columns for better readability */
+@media (orientation:landscape){
+  .brd-wrap{max-height:calc(100vh - 200px)}
+  .brd{grid-template-columns:repeat(10,1fr);gap:7px}
+  .cel-wrap{aspect-ratio:4/5}
+  .cel-back{padding:6px 5px;gap:3px}
+  .cel-back .ci svg{width:28px!important;height:28px!important}
+  .cel-back .ev-text{font-size:.78rem;line-height:1.3}
+  .cel-back .cn{font-size:.65rem}
+  .cel-front .cn{font-size:.72rem}
+  .cel-front .card-q{font-size:2.1rem}
+}
 
 /* category color stripe on revealed card */
 .cel-back.cd{border-bottom:3px solid #f59e0b}.cel-back.cl{border-bottom:3px solid var(--pink)}
@@ -1036,6 +1049,15 @@ select option{background:var(--bg2)}
   </div>
 </div>
 
+<div class="mn-turn-modal" id="sg-turn-modal">
+  <div class="mn-turn-modal-c">
+    <div class="mn-turn-av" id="sg-turn-av"></div>
+    <div class="mn-turn-name" id="sg-turn-name"></div>
+    <div class="mn-turn-sub">次の番です！</div>
+    <button class="btn bp" onclick="closeSgTurn()" style="max-width:240px;margin:0 auto">サイコロを振る</button>
+  </div>
+</div>
+
 <!-- ============================================================
      JAVASCRIPT
      ============================================================ -->
@@ -1468,7 +1490,7 @@ function renderSGCat(){
 }
 
 function genBoard(){
-  const n=30,b=[{t:'start',ic:'i-crown',ev:'スタート！',cls:'cs',lb:'スタート',cat:'rgba(0,232,255,.7)'}];
+  const n=23,b=[{t:'start',ic:'i-crown',ev:'スタート！',cls:'cs',lb:'スタート',cat:'rgba(0,232,255,.7)'}];
   const cr=S.sg.cr/100,cc=S.sg.cc;
   const active=(S.sg.cats||[]).filter(c=>c.on!==false&&Array.isArray(c.ev)&&c.ev.length);
   const totalW=active.reduce((s,c)=>s+(c.w||1),0);
@@ -1593,7 +1615,7 @@ function showFSE(c){
   document.getElementById('fse-icon').innerHTML=`<svg viewBox="0 0 24 24" style="width:48px;height:48px"><use href="#${c.ic}"/></svg>`;
   document.getElementById('fse-icon').style.background=c.cat||'rgba(255,255,255,.1)';
   document.getElementById('fse-text').textContent=c.ev;
-  const cat=document.getElementById('fse-cat');cat.textContent=c.lb||c.t;cat.style.background=c.cat||'rgba(255,255,255,.1)';
+  const cat=document.getElementById('fse-cat');cat.textContent='';cat.style.display='none';
   el.classList.add('on');fanfare();
   // handle moves
   if(c.t==='move'){
@@ -1606,7 +1628,9 @@ function showFSE(c){
     renderBrd();renderStat();
   }
 }
-function dismissEv(){document.getElementById('fse').classList.remove('on');document.getElementById('sg-dres').textContent='';sg.cur=(sg.cur+1)%S.players.length;updTurn();renderBrd();renderStat();dRoll=false;se()}
+function dismissEv(){document.getElementById('fse').classList.remove('on');document.getElementById('sg-dres').textContent='';sg.cur=(sg.cur+1)%S.players.length;while(sg.fin.includes(sg.cur)&&sg.fin.length<S.players.length)sg.cur=(sg.cur+1)%S.players.length;updTurn();renderBrd();renderStat();dRoll=false;se();if(sg.on&&sg.fin.length<S.players.length)showSgTurn()}
+function showSgTurn(){const p=S.players[sg.cur];if(!p)return;const av=document.getElementById('sg-turn-av');av.className='mn-turn-av av'+p.ci;av.textContent=p.name[0];document.getElementById('sg-turn-name').textContent=p.name+' の番';document.getElementById('sg-turn-modal').classList.add('on')}
+function closeSgTurn(){document.getElementById('sg-turn-modal').classList.remove('on');se()}
 
 /* ═══════ 5秒STOP ═══════ */
 let s5Running=false,s5Start=0,s5Raf=0,s5Pi=0;
